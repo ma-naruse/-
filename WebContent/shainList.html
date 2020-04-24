@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
+		<link rel="stylesheet" href="shain.css">
 		<script type="text/javascript" src="jquery-1.10.2.js"></script>
 		<script type="text/javascript" src="shainList.js"></script>
 		<title>社員一覧表示ページ</title>
@@ -10,17 +11,22 @@
 		<h1>社員一覧</h1>
 		所属部署
 		<select id = "inputBushoName">
+		<option value="null">選択してください</option>
 		<option>総務部</option>
 		<option>営業部</option>
 		<option>人事部</option>
 		<option>システム開発部</option>
 		</select><br>
 		社員ID
-		<input type="text" placeholder ="社員ID" id = "inputShainId"><br>
+		<input type="text" placeholder="社員ID" id="inputShainId"><br>
 		名前に含まれる文字
-		<input type="text" id = "inputShainName"><br>
+		<input type="text" placeholder="名前" id = "inputShainName"><br>
 		<button id="searchButton" >検索</button><br>
 		<table id = "shainList">
+			<tr>
+			<th>社員ID</th>
+			<th>社員名</th>
+			</tr>
 		</table>
 	</body>
 </html>
