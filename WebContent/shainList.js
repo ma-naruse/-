@@ -2,13 +2,9 @@ function showAllShain() {
 	console.log("全社員表示");
 	$.ajax({
 		type : 'GET',
-		url : '/kisoTeichaku/ShainSearchServlet',
+		url : '/kisoTeichaku/ShainAllListup',
 		dataType : 'json',
-		data : {
-			shainId : '*'
-		},
 		success : function(data) {
-			console.log("success");
 			console.log(data);
 			for (var i = 0; i < data.length; i++) {
 				var shain = data[i];

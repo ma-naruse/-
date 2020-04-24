@@ -18,35 +18,27 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Servlet implementation class ShainSearchServlet
+ * Servlet implementation class ShainAllListup
  */
-@WebServlet("/ShainSearchServlet")
-public class ShainSearchServlet extends HttpServlet {
+@WebServlet("/ShainAllListup")
+public class ShainAllListup extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public ShainSearchServlet() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public ShainAllListup() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html; charset=Windows-31J");
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		String shainId = request.getParameter("shainId");
-		System.out.println(shainId);
-		String shainName = request.getParameter("shainName");
-		System.out.println(shainName);
-		String bushoName = request.getParameter("bushoName");
-		System.out.println(bushoName);
-		
 		try { //JDBCの準備
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 		} catch (ClassNotFoundException e) {
@@ -70,18 +62,7 @@ public class ShainSearchServlet extends HttpServlet {
 					", MS_BUSHO MB \n" +
 					"where 1=1 \n" +
 					"and MS.SHAIN_BUSHOID = MB.BUSHO_ID \n";
-
-			if(!("".equals(shainId))){
-			sql += "and MS.SHAIN_ID = '"+shainId+"' \n";
-			}
-			if(!("".equals(shainName))){
-			sql += "and MS.SHAIN_NAME like '%"+shainName+"%' \n";
-			}
-			if(!("".equals(bushoName))){
-			sql += 	"and MB.BUSHO_NAME = '"+bushoName+"' \n";
-			}
-		sql += "order by MB.BUSHO_ID desc";
-		System.out.println(sql);
+		
 		List <Shain> shainList = new ArrayList<>();
 		try ( // データベースへ接続します 
 			Connection con = DriverManager.getConnection(url, user, pass);// SQLの命令文を実行するための準備をおこないます
@@ -116,8 +97,7 @@ public class ShainSearchServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
