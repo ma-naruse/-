@@ -26,10 +26,12 @@ function bushoAdd(){
 	};
 	$.ajax({
 		type:'GET',
-		url:'',
+		url:'/kisoTeichaku/BushoAdd',
 		data:requestQuery,
 		success:function(){
 			alert("登録に成功しました。");
+			$('#bushoList').html("");
+			showAllBusho();
 		},
 		error(){
 			alert('データの通信に失敗しました');
@@ -40,5 +42,5 @@ function bushoAdd(){
 $(document).ready(function() {
 	showAllBusho();
 	
-	$('#bushoAddButton').click(bushoAdd());
+	$('#bushoAddButton').click(bushoAdd);
 });
