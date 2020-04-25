@@ -39,6 +39,7 @@ public class ShainAllListup extends HttpServlet {
 		response.setContentType("text/html; charset=Windows-31J");
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		System.out.println("全社員表示");
 		try { //JDBCの準備
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 		} catch (ClassNotFoundException e) {
@@ -61,7 +62,8 @@ public class ShainAllListup extends HttpServlet {
 					"MS_SHAIN MS \n" +
 					", MS_BUSHO MB \n" +
 					"where 1=1 \n" +
-					"and MS.SHAIN_BUSHOID = MB.BUSHO_ID \n";
+					"and MS.SHAIN_BUSHOID = MB.BUSHO_ID \n" + 
+					"order by MS.SHAIN_ID ";
 		
 		List <Shain> shainList = new ArrayList<>();
 		try ( // データベースへ接続します 

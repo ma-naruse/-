@@ -1,5 +1,4 @@
 function showAllShain() {
-	console.log("全社員表示");
 	$.ajax({
 		type : 'GET',
 		url : '/kisoTeichaku/ShainAllListup',
@@ -41,6 +40,7 @@ function shainSearch() {
 			if(data[0] == undefined){
 				$('#shainList').html("該当する社員はいませんでした。");
 			}else{
+				$('#shainList').append("<tr><th>社員ID</th><th>社員名</th><th>所属部署</th></tr>");
 				for (var i = 0; i < data.length; i++) {
 					var shain = data[i];
 					$('#shainList').append("<tr><td>" + shain.shainId + "</td><td>"
