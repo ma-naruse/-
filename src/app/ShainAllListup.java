@@ -88,7 +88,7 @@ public class ShainAllListup extends HttpServlet {
 
 				} catch (Exception e) { 
 
-				throw new RuntimeException(String.format("検索処理の実施中にエラーが発生しました。	詳細:[%s]", e.getMessage()), e); 
+			throw new RuntimeException(String.format("検索処理の実施中にエラーが発生しました。	詳細:[%s]", e.getMessage()), e);
 
 				} 
 		
