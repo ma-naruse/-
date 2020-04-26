@@ -4,13 +4,13 @@
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="shain.css">
 		<script type="text/javascript" src="jquery-1.10.2.js"></script>
-		<script type="text/javascript" src="shainList.js"></script>
+		<script type="text/javascript" src="shainSearch.js"></script>
 		<title>社員一覧表示ページ</title>
 	</head>
 	<body>
 		<h1>社員一覧</h1>
 		所属部署
-		<select id = "inputBushoName">
+		<select id = "inputSearchBushoName">
 		<option value="">選択してください</option>
 		<option>総務部</option>
 		<option>営業部</option>
@@ -18,16 +18,16 @@
 		<option>システム開発部</option>
 		</select><br>
 		社員ID
-		<input type="text" placeholder="社員ID" id="inputShainId"><br>
+		<input type="text" placeholder="社員ID" id="inputSearchShainId"><br>
 		名前に含まれる文字
-		<input type="text" placeholder="名前" id = "inputShainName"><br>
-		<button id="searchButton" >検索</button><br>
-		<p>※何も入力しないと全社員が表示されますのでご注意ください</p>
+		<input type="text" placeholder="名前" id = "inputSearchShainName"><br>
+		<button id="searchButton" >検索</button>※何も入力しないと全社員が表示されますのでご注意ください<br>
 		<table id = "shainList">
 			<tr>
 			<th>社員ID</th>
 			<th>社員名</th>
 			</tr>
 		</table>
+		<a href="/kisoTeichaku/shainEdit.html" target="_blank">社員情報の編集ページへ</a>
 	</body>
 </html>

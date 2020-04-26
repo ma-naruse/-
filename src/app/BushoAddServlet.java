@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,16 +15,16 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Servlet implementation class BushoAllListup
+ * Servlet implementation class BushoAdd
  */
-@WebServlet("/BushoAllListup")
-public class BushoAllListup extends HttpServlet {
+@WebServlet("/BushoAddServlet")
+public class BushoAddServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public BushoAllListup() {
+	public BushoAddServlet() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -40,45 +37,38 @@ public class BushoAllListup extends HttpServlet {
 		response.setContentType("text/html; charset=Windows-31J");
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		System.out.println("全部署表示");
-		try { //JDBCの準備
+		String bushoId = request.getParameter("bushoId");
+		String bushoName = request.getParameter("bushoName");
+
+		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(String.format("JDBCドライバのロードに失敗しました。詳細:[%s]", e.getMessage()), e);
 		}
+
 		String url = "jdbc:oracle:thin:@localhost:1521:XE";
 		String user = "kiso";
 		String pass = "kiso";
 
-		String sql = "select \n" +
-				"* \n" +
-				"from \n" +
-				"MS_BUSHO MB \n" +
-				"order by BUSHO_ID";
+		String insertSql = "INSERT into MS_BUSHO \n" +
+				"(BUSHO_ID,BUSHO_NAME) \n" +
+				"values ('" + bushoId + "','" + bushoName + "')";
+		String commitSql = "commit";
 
-		List<Busho> bushoList = new ArrayList<>();
-		try ( // データベースへ接続します 
-				Connection con = DriverManager.getConnection(url, user, pass); // SQLの命令文を実行するための準備をおこないます
-				Statement stmt = con.createStatement(); // SQLの命令文を実行し、その結果をResultSet型のrsに代入します 
-				ResultSet rs1 = stmt.executeQuery(sql);) {
-			while (rs1.next()) {
-				Busho busho = new Busho();
-				busho.setBushoId(rs1.getString(1));
-				busho.setBushoName(rs1.getString(2));
-				bushoList.add(busho);
+		try (
+				Connection con = DriverManager.getConnection(url, user, pass);
+				Statement stmt = con.createStatement();
 
-			}
-
-			// SQL実行後の処理内容 
-
+		) {
+			@SuppressWarnings("unused")
+			int resultCount1 = stmt.executeUpdate(insertSql);
+			@SuppressWarnings("unused")
+			int resultCount2 = stmt.executeUpdate(commitSql);
 		} catch (Exception e) {
-
 			throw new RuntimeException(String.format("検索処理の実施中にエラーが発生しました。	詳細:[%s]", e.getMessage()), e);
-
 		}
-
 		PrintWriter pw = response.getWriter();
-		pw.append(new ObjectMapper().writeValueAsString(bushoList));
+		pw.append(new ObjectMapper().writeValueAsString("ok"));
 	}
 
 	/**

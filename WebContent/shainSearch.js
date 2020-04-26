@@ -1,7 +1,7 @@
 function showAllShain() {
 	$.ajax({
 		type : 'GET',
-		url : '/kisoTeichaku/ShainAllListup',
+		url : '/kisoTeichaku/ShainAllListupServlet',
 		dataType : 'json',
 		success : function(data) {
 			console.log(data);
@@ -19,20 +19,20 @@ function showAllShain() {
 }
 
 function shainSearch() {
-	var inputBushoName = $('#inputBushoName').val();
-	console.log(inputBushoName);
-	var inputShainId = $('#inputShainId').val();
-	console.log(inputShainId);
-	var inputShainName = $('#inputShainName').val();
-	console.log(inputShainName);
+	var inputSearchBushoName = $('#inputSearchBushoName').val();
+	console.log(inputSearchBushoName);
+	var inputSearchShainId = $('#inputSearchShainId').val();
+	console.log(inputSearchShainId);
+	var inputSearchShainName = $('#inputSearchShainName').val();
+	console.log(inputSearchShainName);
 	$.ajax({
 		Type : 'GET',
 		url : '/kisoTeichaku/ShainSearchServlet',
 		dataType : 'json',
 		data : {
-			shainId : inputShainId,
-			shainName : inputShainName,
-			bushoName : inputBushoName
+			shainId : inputSearchShainId,
+			shainName : inputSearchShainName,
+			bushoName : inputSearchBushoName
 		},
 		success : function(data) {
 			console.log(data);

@@ -66,7 +66,7 @@ public class ShainSearchServlet extends HttpServlet {
 				", MS.SHAIN_SEX SEX \n" +
 				", MS.SHAIN_POSTCD POSTCD \n" +
 				", MS.SHAIN_PREFECTURE PRE \n" +
-				", MS.SHAIN_ADDRESS ADDR \n" +
+				", MS.SHAIN_ADDRESS ADDRESS \n" +
 				", MB.BUSHO_NAME BN \n" +
 				"from \n" +
 				"MS_SHAIN MS \n" +
@@ -95,11 +95,12 @@ public class ShainSearchServlet extends HttpServlet {
 				Shain shain = new Shain();
 				shain.setShainId(rs1.getString("ID"));
 				shain.setShainName(rs1.getString("NAME"));
+				shain.setShainAge(rs1.getInt("AGE"));
+				shain.setShainSex(rs1.getString("SEX"));
+				shain.setShainPostCd(rs1.getString("POSTCD"));
+				shain.setShainPrefecture(rs1.getString("PRE"));
+				shain.setShainAddress(rs1.getString("ADDRESS"));
 				shain.setBushoName(rs1.getString("BN"));
-				/*	shain.setShainAge(rs1.getInt("SHAIN_AGE"));
-					shain.setShainPostCd(rs1.getString("SHAIN_POSTCD"));
-					shain.setShainPrefecture(rs1.getString("SHAIN_PREFECTURE"));
-					shain.setShainAddress(rs1.getString("SHAIN_ADDRESS"));*/
 				shainList.add(shain);
 			}
 		} catch (Exception e) {

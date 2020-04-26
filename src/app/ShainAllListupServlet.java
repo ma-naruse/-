@@ -20,14 +20,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Servlet implementation class ShainAllListup
  */
-@WebServlet("/ShainAllListup")
-public class ShainAllListup extends HttpServlet {
+@WebServlet("/ShainAllListupServlet")
+public class ShainAllListupServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ShainAllListup() {
+    public ShainAllListupServlet() {
         super();
         // TODO Auto-generated constructor stub
     }

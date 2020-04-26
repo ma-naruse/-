@@ -1,7 +1,7 @@
 function showAllBusho(){
 	$.ajax({
 		type : 'GET',
-		url : '/kisoTeichaku/BushoAllListup',
+		url : '/kisoTeichaku/BushoAllListupServlet',
 		dataType : 'json',
 		success : function(data) {
 			console.log(data);
@@ -26,7 +26,7 @@ function bushoAdd(){
 	};
 	$.ajax({
 		type:'GET',
-		url:'/kisoTeichaku/BushoAdd',
+		url:'/kisoTeichaku/BushoAddServlet',
 		data:requestQuery,
 		success:function(){
 			alert("登録に成功しました。");
