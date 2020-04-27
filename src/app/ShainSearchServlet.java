@@ -47,6 +47,7 @@ public class ShainSearchServlet extends HttpServlet {
 		System.out.println(shainName);
 		String bushoName = request.getParameter("bushoName");
 		System.out.println(bushoName);
+		System.out.println(shainId.equals(""));
 
 		try { //JDBCの準備
 			Class.forName("oracle.jdbc.driver.OracleDriver");

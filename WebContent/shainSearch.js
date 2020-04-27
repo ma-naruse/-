@@ -1,15 +1,17 @@
 function showAllShain() {
+	console.log('全社員表示');
 	$.ajax({
 		type : 'GET',
 		url : '/kisoTeichaku/ShainAllListupServlet',
 		dataType : 'json',
 		success : function(data) {
 			console.log(data);
+			$('#shainList').append('<tr><th>社員ID</th><th>社員名</th></tr>');
 			for (var i = 0; i < data.length; i++) {
 				var shain = data[i];
 				$('#shainList').append(
-						"<tr><td>" + shain.shainId + "</td><td>"
-								+ shain.shainName + "</td></tr>");
+						'<tr><td =id="shainId'+i+'">' + shain.shainId + '</td><td id="shain'+i+'">'
+								+ shain.shainName + '</td></tr>');
 			}
 		},
 		error : function() {
@@ -18,7 +20,7 @@ function showAllShain() {
 	});
 }
 
-function shainSearch() {
+function searchShain() {
 	var inputSearchBushoName = $('#inputSearchBushoName').val();
 	console.log(inputSearchBushoName);
 	var inputSearchShainId = $('#inputSearchShainId').val();
@@ -38,13 +40,13 @@ function shainSearch() {
 			console.log(data);
 			$('#shainList').html("");
 			if(data[0] == undefined){
-				$('#shainList').html("該当する社員はいませんでした。");
+				$('#shainList').html('該当する社員はいませんでした。');
 			}else{
-				$('#shainList').append("<tr><th>社員ID</th><th>社員名</th><th>所属部署</th></tr>");
+				$('#shainList').append('<tr><th>社員ID</th><th>社員名</th><th>所属部署</th></tr>');
 				for (var i = 0; i < data.length; i++) {
 					var shain = data[i];
-					$('#shainList').append("<tr><td>" + shain.shainId + "</td><td>"
-											+ shain.shainName + "</td><td>"+shain.bushoName+"</td></tr>");
+					$('#shainList').append('<tr><td>' + shain.shainId + '</td><td>'
+											+ shain.shainName + '</td><td>'+shain.bushoName+'</td></tr>');
 				}
 			}	
 		},
@@ -54,8 +56,29 @@ function shainSearch() {
 	});
 }
 
+function deleteShain(){
+	var deleteShainId = $('#deleteShainId').val();
+	console.log(deleteShainId);
+	
+	$.ajax({
+		type:'POST',
+		url:'/kisoTeichaku/ShainDeleteServlet',
+		data:{shainId : deleteShainId},
+		success:function(){
+			alert('削除が完了しました');
+			$('#shainList').html('');
+			showAllShain();
+		},
+		error:function(){
+			alert('データの通信に失敗しました。');
+		}
+	});
+}
+
 $(document).ready(function() {
 	showAllShain();
 
-	$('#searchButton').click(shainSearch);
+	$('#searchButton').click(searchShain);
+	$('#deleteButton').click(deleteShain);
+	
 });
