@@ -10,15 +10,15 @@
 	<h1>社員新規追加ページ</h1>
 	新規作成する社員情報を下のフォームに入力して、「追加」ボタンを押してください。
 	<form id="shainInfo">
-		社員ID<input type="text" id="addShainId"></input><br> 社員名<input
+		社員ID:<span id="nextShainId"></span><input type="hidden" id="addShainId"></input>(自動)<br> 社員名<input
 			type="text" id="addShainName"></input><br> 年齢<input type="text"
 			id="addShainAge"></input><br> 性別<input type="text"
 			id="addShainSex"></input><br> 郵便番号<input type="text"
 			id="addShainPostCd"></input><br> 居住都道府県<select
 			id="addShainPrefecture"></select><br> 住所<input type="text"
-			id="addShainAddress"></input><br> 所属部署<select
-			id="addBushoName"></select><br>
+			id="addShainAddress"></input><br> 所属部署<select id="addBushoName"></select>(必須)<br>
 	</form>
 	<button id="addButton">追加</button>
+	<button id="cancelButton">キャンセル</button>
 </body>
 </html>

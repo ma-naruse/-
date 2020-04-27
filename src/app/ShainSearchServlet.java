@@ -38,8 +38,6 @@ public class ShainSearchServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		response.setContentType("text/html; charset=Windows-31J");
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		System.out.println("社員検索");
 		String shainId = request.getParameter("shainId");
 		System.out.println(shainId);

@@ -15,16 +15,16 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Servlet implementation class ShainDeleteServlet
+ * Servlet implementation class BushoDeleteServlet
  */
-@WebServlet("/ShainDeleteServlet")
-public class ShainDeleteServlet extends HttpServlet {
+@WebServlet("/BushoDeleteServlet")
+public class BushoDeleteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ShainDeleteServlet() {
+	public BushoDeleteServlet() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -34,17 +34,8 @@ public class ShainDeleteServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		String shainId = request.getParameter("shainId");
-		System.out.println("delete:" + shainId);
+		String bushoId = request.getParameter("bushoId");
+		System.out.println("delete:" + bushoId);
 
 		try { //JDBCの準備
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -56,23 +47,29 @@ public class ShainDeleteServlet extends HttpServlet {
 		String user = "kiso";
 		String password = "kiso";
 
-		String deleteSql = "delete MS_SHAIN \n" +
-				"where SHAIN_ID = '" + shainId + "'";
-		String commitSql = "commit";
+		String deleteSql = "delete MS_BUSHO \n" +
+				"where BUSHO_ID = '" + bushoId + "'";
 
 		try (
 				Connection con = DriverManager.getConnection(url, user, password);
 				Statement stmt = con.createStatement();) {
 			@SuppressWarnings("unused")
-			int resultCount1 = stmt.executeUpdate(deleteSql);
-			@SuppressWarnings("unused")
-			int resultCount2 = stmt.executeUpdate(commitSql);
+			int resultCount = stmt.executeUpdate(deleteSql);
 		} catch (Exception e) {
 			throw new RuntimeException(String.format("検索処理の実行中にエラーが発生しました。詳細:[%s]", e.getMessage()), e);
 		}
 
 		PrintWriter pw = response.getWriter();
 		pw.append(new ObjectMapper().writeValueAsString("ok"));
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
 	}
 
 }

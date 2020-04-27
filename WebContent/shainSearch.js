@@ -70,6 +70,5 @@ function searchShain() {
 }
 $(document).ready(function() {
 	listUpBushoName();
-
 	$('#searchButton').click(searchShain);
 });

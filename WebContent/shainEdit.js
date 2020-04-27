@@ -1,13 +1,15 @@
 function showShainInfo() {
-	var inputShainId = $('#shainIdToPic').val();
-	console.log(inputShainId);
+	var parameter = location.search.substring(1, location.search.length);
+	parameter = decodeURIComponent(parameter);
+	parameter = parameter.split('=')[1];
+	console.log(parameter);
 	$
 			.ajax({
 				Type : 'GET',
 				url : '/kisoTeichaku/ShainEditServlet',
 				dataType : 'json',
 				data : {
-					shainId : inputShainId
+					shainId : parameter
 				},
 				success : function(data) {
 					console.log(data);
@@ -42,18 +44,38 @@ function showShainInfo() {
 													+ '住所<input type="text" value='
 													+ shain.shainAddress
 													+ ' id="editShainAddress"></input><br>'
-													+ '所属部署<input type="text" value='
+													+ '所属部署<select id="editBushoName"><option>'
 													+ shain.bushoName
-													+ ' id="editBushoName"></input>'
-													+ '</div>');
+													+ '</option>' + '</div>');
 						}
 					}
 					listUpPrefecture();
+					listUpBushoName();
 				},
 				error : function() {
 					alert('データの通信に失敗しました');
 				},
 			});
+}
+function listUpBushoName() {
+	$.ajax({
+		typr : 'GET',
+		url : '/kisoTeichaku/BushoAllListupServlet',
+		dataType : 'json',
+		success : function(data) {
+			console.log(data);
+			console.log(data.length);
+			for (var i = 0; i < data.length; i++) {
+				var busho = data[i];
+				console.log(busho.bushoName);
+				$('#editBushoName').append(
+						'<option>' + busho.bushoName + '</option>');
+			}
+		},
+		error : function() {
+			alert("データの通信に失敗しました。")
+		}
+	});
 }
 
 function listUpPrefecture() {
@@ -107,6 +129,7 @@ function editShainInfo() {
 		data : requestQuery,
 		success : function() {
 			alert('編集が完了しました。');
+			location.href = './shainList.html'
 		},
 		error : function() {
 			alert('データの通信に失敗しました。');
@@ -114,9 +137,13 @@ function editShainInfo() {
 	});
 }
 
+function cancel() {
+	alert('入力をキャンセルしました。');
+	location.href = './shainList.html';
+}
+
 $(document).ready(function() {
-
-	$('#showShainIdButton').click(showShainInfo);
+	showShainInfo();
 	$('#editButton').click(editShainInfo);
-
+	$('#cancelButton').click(cancel);
 });

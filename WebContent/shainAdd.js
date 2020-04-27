@@ -1,13 +1,27 @@
+function countShain() {
+	$.ajax({
+		type : 'GET',
+		url : '/kisoTeichaku/ShainAllListupServlet',
+		dataType : 'json',
+		success : function(data) {
+			var ret = ('000' + (data.length+1)).slice(-4);
+			 $('#nextShainId').html(ret);
+			 $('#addShainId').val(ret);
+		},
+		error : function() {
+			alert('データの通信に失敗しました。');
+		}
+	});
+	console.log('count');
+}
+
 function listUpBushoName() {
 	$.ajax({
-		typr : 'GET',
+		type : 'GET',
 		url : '/kisoTeichaku/BushoAllListupServlet',
 		dataType : 'json',
 		success : function(data) {
-			console.log(data);
-			console.log(data.length);
-			$('#addBushoName').append(
-					'<option value="">選択してください</option>');
+			$('#addBushoName').append('<option value="">選択してください</option>');
 			for (var i = 0; i < data.length; i++) {
 				var busho = data[i];
 				console.log(busho.bushoName);
@@ -27,13 +41,10 @@ function listUpPrefecture() {
 		url : '/kisoTeichaku/GetPrefecture',
 		dataType : 'json',
 		success : function(data) {
-			console.log(data);
-			console.log(data.length);
 			$('#addShainPrefecture').append(
 					'<option value="">選択してください</option>');
 			for (var i = 0; i < data.length; i++) {
 				var pref = data[i];
-				console.log(pref.name);
 				$('#addShainPrefecture').append(
 						'<option>' + pref.name + '</option>');
 			}
@@ -72,6 +83,7 @@ function addShain() {
 		data : requestQuery,
 		success : function() {
 			alert('追加が完了しました。');
+			location.href = './shainList.html';
 		},
 		error : function() {
 			alert('データの通信に失敗しました。');
@@ -79,8 +91,15 @@ function addShain() {
 	});
 }
 
+function cancel() {
+	alert('入力をキャンセルしました。');
+	location.href = './shainList.html';
+}
+
 $(document).ready(function() {
+	countShain();
 	listUpBushoName();
 	listUpPrefecture();
 	$('#addButton').click(addShain);
+	$('#cancelButton').click(cancel);
 });

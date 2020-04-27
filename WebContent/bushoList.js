@@ -6,15 +6,39 @@ function showAllBusho(){
 		success : function(data) {
 			console.log(data);
 			console.log(data.length);
+			$('#bushoList').html('');
 			$('#bushoList').append('<tr><th>部署ID</th><th>部署名</th></tr>');
 			for (var i = 0; i < data.length; i++) {
 				var busho = data[i];
-				$('#bushoList').append('<tr><td>' + busho.bushoId + '</td><td>'+ busho.bushoName + '</td></tr>');
+				$('#bushoList').append('<tr><td>' + busho.bushoId + '</td><td>'+ busho.bushoName + '</td><td><button value="' + busho.bushoId + '"onclick="editBusho(this)">編集</button></td><td><button value="' + busho.bushoId + '" onclick="deleteBusho(this)">削除</button></td></tr>');
 			}
 		},
 		error : function() {
 			alert('データの通信に失敗しました');
 		},
+	});
+}
+
+function editBusho(button){
+	var query = $(button).val();
+	location.href = "./bushoEdit.html?="+query;
+}
+
+function deleteBusho(button){
+	var query = $(button).val();
+	$.ajax({
+		type:'GET',
+		url:'/kisoTeichaku/BushoDeleteServlet',
+		data : {
+			bushoId : query
+		},
+		success:function(){
+			alert('削除が完了しました。');
+			showAllBusho();
+		},
+		error:function(){
+			alert('データの通信に失敗しました。');
+		}
 	});
 }
 
@@ -42,6 +66,5 @@ function bushoAdd(){
 
 $(document).ready(function() {
 	showAllBusho();
-	
 	$('#bushoAddButton').click(bushoAdd);
 });
