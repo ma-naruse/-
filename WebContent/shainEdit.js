@@ -1,7 +1,8 @@
 function showShainInfo() {
 	var inputShainId = $('#shainIdToPic').val();
 	console.log(inputShainId);
-	$.ajax({
+	$
+			.ajax({
 				Type : 'GET',
 				url : '/kisoTeichaku/ShainEditServlet',
 				dataType : 'json',
@@ -20,7 +21,9 @@ function showShainInfo() {
 									.append(
 											'<div>社員ID:<span>'
 													+ shain.shainId
-													+ '</span><input type="hidden"value="'+shain.shainId+'"id="editShainId"></input><br>'
+													+ '</span><input type="hidden"value="'
+													+ shain.shainId
+													+ '"id="editShainId"></input><br>'
 													+ '社員名<input type="text" value='
 													+ shain.shainName
 													+ ' id="editShainName"></input><br>'
@@ -33,9 +36,9 @@ function showShainInfo() {
 													+ '郵便番号<input type="text" value='
 													+ shain.shainPostCd
 													+ ' id="editShainPostCd"></input><br>'
-													+ '居住都道府県<input type="text" value='
+													+ '居住都道府県<select id="editShainPrefecture"><option>'
 													+ shain.shainPrefecture
-													+ ' id="editShainPrefecture"></input><br>'
+													+ '</option></select><br>'
 													+ '住所<input type="text" value='
 													+ shain.shainAddress
 													+ ' id="editShainAddress"></input><br>'
@@ -45,6 +48,7 @@ function showShainInfo() {
 													+ '</div>');
 						}
 					}
+					listUpPrefecture();
 				},
 				error : function() {
 					alert('データの通信に失敗しました');
@@ -52,7 +56,29 @@ function showShainInfo() {
 			});
 }
 
-function editShainInfo(){
+function listUpPrefecture() {
+	$.ajax({
+		typr : 'GET',
+		url : '/kisoTeichaku/GetPrefecture',
+		dataType : 'json',
+		success : function(data) {
+			console.log(data);
+			console.log(data.length);
+			for (var i = 0; i < data.length; i++) {
+				var pref = data[i];
+				console.log(pref.name);
+				$('#editShainPrefecture').append(
+						'<option>' + pref.name + '</option>');
+			}
+		},
+		error : function() {
+			alert("データの通信に失敗しました。")
+		}
+	});
+}
+
+function editShainInfo() {
+	console.log("sousinndekita");
 	var shainId = $('#editShainId').val();
 	var shainName = $('#editShainName').val();
 	var shainAge = $('#editShainAge').val();
@@ -65,24 +91,24 @@ function editShainInfo(){
 	console.log(shainName);
 	console.log(shainSex);
 	var requestQuery = {
-			shainId : shainId,
-			shainName: shainName,
-			shainAge : shainAge,
-			shainSex : shainSex,
-			shainPostCd : shainPostCd,
-			shainPrefecture : shainPrefecture,
-			shainAddress : shainAddress,
-			bushoName : bushoName
+		shainId : shainId,
+		shainName : shainName,
+		shainAge : shainAge,
+		shainSex : shainSex,
+		shainPostCd : shainPostCd,
+		shainPrefecture : shainPrefecture,
+		shainAddress : shainAddress,
+		bushoName : bushoName
 	}
-	
+
 	$.ajax({
 		type : 'POST',
 		url : '/kisoTeichaku/ShainEditServlet',
 		data : requestQuery,
-		success : function(){
+		success : function() {
 			alert('編集が完了しました。');
 		},
-		error:function(){
+		error : function() {
 			alert('データの通信に失敗しました。');
 		}
 	});

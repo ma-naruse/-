@@ -47,7 +47,6 @@ public class ShainSearchServlet extends HttpServlet {
 		System.out.println(shainName);
 		String bushoName = request.getParameter("bushoName");
 		System.out.println(bushoName);
-		System.out.println(shainId.equals(""));
 
 		try { //JDBCの準備
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -84,7 +83,7 @@ public class ShainSearchServlet extends HttpServlet {
 		if (!("".equals(bushoName) && (!("null".equals(bushoName))))) {
 			sql += "and MB.BUSHO_NAME = '" + bushoName + "' \n";
 		}
-		sql += "order by MB.BUSHO_ID desc";
+		sql += "order by MB.BUSHO_ID";
 
 		System.out.println(sql);
 		try ( // データベースへ接続します 

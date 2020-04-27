@@ -1,22 +1,23 @@
-function showAllShain() {
-	console.log('全社員表示');
+function listUpBushoName() {
 	$.ajax({
-		type : 'GET',
-		url : '/kisoTeichaku/ShainAllListupServlet',
+		typr : 'GET',
+		url : '/kisoTeichaku/BushoAllListupServlet',
 		dataType : 'json',
 		success : function(data) {
 			console.log(data);
-			$('#shainList').append('<tr><th>社員ID</th><th>社員名</th></tr>');
+			console.log(data.length);
+			$('#inputSearchBushoName').append(
+					'<option value="">選択してください</option>');
 			for (var i = 0; i < data.length; i++) {
-				var shain = data[i];
-				$('#shainList').append(
-						'<tr><td =id="shainId'+i+'">' + shain.shainId + '</td><td id="shain'+i+'">'
-								+ shain.shainName + '</td></tr>');
+				var busho = data[i];
+				console.log(busho.bushoName);
+				$('#inputSearchBushoName').append(
+						'<option>' + busho.bushoName + '</option>');
 			}
 		},
 		error : function() {
-			alert('データの通信に失敗しました');
-		},
+			alert("データの通信に失敗しました。")
+		}
 	});
 }
 
@@ -27,41 +28,48 @@ function searchShain() {
 	console.log(inputSearchShainId);
 	var inputSearchShainName = $('#inputSearchShainName').val();
 	console.log(inputSearchShainName);
-	$.ajax({
-		Type : 'GET',
-		url : '/kisoTeichaku/ShainSearchServlet',
-		dataType : 'json',
-		data : {
-			shainId : inputSearchShainId,
-			shainName : inputSearchShainName,
-			bushoName : inputSearchBushoName
-		},
-		success : function(data) {
-			console.log(data);
-			$('#shainList').html("");
-			if(data[0] == undefined){
-				$('#shainList').html('該当する社員はいませんでした。');
-			}else{
-				$('#shainList').append('<tr><th>社員ID</th><th>社員名</th><th>所属部署</th></tr>');
-				for (var i = 0; i < data.length; i++) {
-					var shain = data[i];
-					$('#shainList').append('<tr><td>' + shain.shainId + '</td><td>'
-											+ shain.shainName + '</td><td>'+shain.bushoName+'</td></tr>');
-				}
-			}	
-		},
-		error : function() {
-			alert('データの通信に失敗しました');
-		},
-	});
+	$
+			.ajax({
+				Type : 'GET',
+				url : '/kisoTeichaku/ShainSearchServlet',
+				dataType : 'json',
+				data : {
+					shainId : inputSearchShainId,
+					shainName : inputSearchShainName,
+					bushoName : inputSearchBushoName
+				},
+				success : function(data) {
+					console.log(data);
+					$('#shainInfo').html("");
+					if (data[0] == undefined) {
+						$('#shainInfo').html('該当する社員はいませんでした。');
+					} else {
+						$('#shainInfo')
+								.append(
+										'<tr><th>社員ID</th><th>社員名</th><th>年齢</th><th>性別</th><th>郵便番号</th><th>都道府県</th><th>住所</th><th>所属部署</th></tr>');
+						for (var i = 0; i < data.length; i++) {
+							var shain = data[i];
+							$('#shainInfo').append(
+									'<tr><td>' + shain.shainId + '</td><td>'
+											+ shain.shainName + '</td><td>'
+											+ shain.shainAge + '</td><td>'
+											+ shain.shainSex + '</td><td>'
+											+ shain.shainPostCd + '</td><td>'
+											+ shain.shainPrefecture
+											+ '</td><td>' + shain.shainAddress
+											+ '</td><td>' + shain.bushoName
+											+ '</td></tr>');
+						}
+					}
+				},
+				error : function() {
+					alert('データの通信に失敗しました');
+				},
+			});
+
 }
-
-
-
 $(document).ready(function() {
-	showAllShain();
+	listUpBushoName();
 
 	$('#searchButton').click(searchShain);
-
-	
 });

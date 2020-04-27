@@ -5,6 +5,7 @@ function showAllBusho(){
 		dataType : 'json',
 		success : function(data) {
 			console.log(data);
+			console.log(data.length);
 			$('#bushoList').append('<tr><th>部署ID</th><th>部署名</th></tr>');
 			for (var i = 0; i < data.length; i++) {
 				var busho = data[i];
