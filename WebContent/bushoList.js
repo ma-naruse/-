@@ -25,21 +25,27 @@ function editBusho(button){
 }
 
 function deleteBusho(button){
-	var query = $(button).val();
-	$.ajax({
-		type:'GET',
-		url:'/kisoTeichaku/BushoDeleteServlet',
-		data : {
-			bushoId : query
-		},
-		success:function(){
-			alert('削除が完了しました。');
-			showAllBusho();
-		},
-		error:function(){
-			alert('データの通信に失敗しました。');
-		}
-	});
+	if (window.confirm('削除してよろしいですか？')) { // 確認ダイアログを表示
+		var query = $(button).val();
+		$.ajax({
+			type:'GET',
+			url:'/kisoTeichaku/BushoDeleteServlet',
+			data : {
+				bushoId : query
+			},
+			success:function(){
+				alert('削除が完了しました。');
+				showAllBusho();
+			},
+			error:function(){
+				alert('削除できませんでした。');
+			}
+		});
+		return true; // 「OK」時は送信を実行
+	} else { // 「キャンセル」時の処理
+		window.alert('キャンセルされました'); // 警告ダイアログを表示
+		return false; // 送信を中止
+	}
 }
 
 function bushoAdd(){

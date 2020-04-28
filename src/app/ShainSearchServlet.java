@@ -29,7 +29,6 @@ public class ShainSearchServlet extends HttpServlet {
 	 */
 	public ShainSearchServlet() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -78,7 +77,7 @@ public class ShainSearchServlet extends HttpServlet {
 		if (!("".equals(shainName))) {
 			sql += "and MS.SHAIN_NAME like '%" + shainName + "%' \n";
 		}
-		if (!("".equals(bushoName) && (!("null".equals(bushoName))))) {
+		if (!("".equals(bushoName))) {
 			sql += "and MB.BUSHO_NAME = '" + bushoName + "' \n";
 		}
 		sql += "order by MB.BUSHO_ID";

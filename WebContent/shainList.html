@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<link rel="stylesheet" href="shain.css">
+<link rel="stylesheet" href="shainList.css">
 <script type="text/javascript" src="jquery-1.10.2.js"></script>
 <script type="text/javascript" src="shainList.js"></script>
 <title>社員一覧表示ページ</title>
@@ -12,15 +12,18 @@
 		<h3>ページリンク</h3>
 		<a href="/kisoTeichaku/bushoList.html" target="_blank">部署情報の閲覧・追加ページへ</a><br>
 	</div>
-	<h1>社員一覧</h1>
-	<table id="shainList">
-	</table>
-	<div class="linkButton">
-		<button type="button"
-			onclick="location.href='/kisoTeichaku/shainAdd.html'">新規追加</button>
-		<button type="button"
-			onclick="location.href='/kisoTeichaku/shainSearch.html'">検索</button>
+	<div class="header">
+		<h1>社員一覧</h1>
 	</div>
-
+	<div class="content">
+		<table id="shainList">
+		</table>
+		<div class="linkButton">
+			<button type="button"
+				onclick="location.href='/kisoTeichaku/shainAdd.html'">新規追加</button>
+			<button type="button"
+				onclick="window.open().location.href='/kisoTeichaku/shainSearch.html'">検索</button>
+		</div>
+	</div>
 </body>
 </html>

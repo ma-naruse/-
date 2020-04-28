@@ -1,0 +1,33 @@
+body{
+	margin:0;
+}
+
+.navigation{
+	background-color:rgb(66, 230, 245);
+	margin:0;
+}
+
+/*.header{
+	text-align:center;
+}*/
+
+.content{
+	margin:0 auto;
+}
+
+table{
+	/*margin:0 auto;*/
+	border : solid black 1px ;
+}
+
+th{
+	border : solid black 1px ;
+}
+
+td{
+	border : solid black 1px ;
+}
+
+.linkButton{
+	margin:0 auto;
+}
