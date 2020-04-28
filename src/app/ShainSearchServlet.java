@@ -43,10 +43,10 @@ public class ShainSearchServlet extends HttpServlet {
 		String shainName = request.getParameter("shainName");
 		System.out.println(shainName);
 		String bushoName = request.getParameter("bushoName");
-		System.out.println(bushoName);
 
 		try { //JDBCの準備
 			Class.forName("oracle.jdbc.driver.OracleDriver");
+			System.out.println(bushoName);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(String.format("JDBCドライバのロードに失敗しました。詳細:[%s]", e.getMessage()), e);
 		}
@@ -105,7 +105,6 @@ public class ShainSearchServlet extends HttpServlet {
 			throw new RuntimeException(String.format("検索処理の実施中にエラーが発生しました。	詳細:[%s]", e.getMessage()), e);
 
 		}
-
 		PrintWriter pw = response.getWriter();
 		pw.append(new ObjectMapper().writeValueAsString(shainList));
 	}

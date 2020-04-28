@@ -26,7 +26,8 @@ function editBusho(button){
 
 function deleteBusho(button){
 	if (window.confirm('削除してよろしいですか？')) { // 確認ダイアログを表示
-		var query = $(button).val();
+		var query = button.value;
+		console.log(query);
 		$.ajax({
 			type:'GET',
 			url:'/kisoTeichaku/BushoDeleteServlet',

@@ -7,16 +7,12 @@ body{
 	margin:0;
 }
 
-/*.header{
+h1{
 	text-align:center;
-}*/
-
-.content{
-	margin:0 auto;
 }
 
 table{
-	/*margin:0 auto;*/
+	margin:0 auto;
 	border : solid black 1px ;
 }
 
@@ -28,6 +24,7 @@ td{
 	border : solid black 1px ;
 }
 
-.linkButton{
-	margin:0 auto;
+button{
+	margin : 0 auto;
 }
+

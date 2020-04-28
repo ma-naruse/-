@@ -6,12 +6,13 @@ function showAllShain() {
 		dataType : 'json',
 		success : function(data) {
 			console.log(data);
-			$('#shainList').append('<tr><th>社員ID</th><th>社員名</th></tr>')
+			$('#shainList').append('<tr><th>社員ID</th><th>社員名</th><th>部署名</th></tr>')
 			for (var i = 0; i < data.length; i++) {
 				var shain = data[i];
 				$('#shainList').append(
 						'<tr><td>' + shain.shainId + '</td><td>'
 								+ shain.shainName + '</td><td>'
+								+shain.bushoName + '</td><td>'
 								+ '<button value="' + shain.shainId
 								+ '"onclick="jumpToEditPage(this)">編集</button>'
 								+ '</td><td>' + '<button value="'

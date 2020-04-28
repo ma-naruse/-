@@ -28,16 +28,18 @@ function searchShain() {
 	console.log(inputSearchShainId);
 	var inputSearchShainName = $('#inputSearchShainName').val();
 	console.log(inputSearchShainName);
+	var rq =  {
+			shainId : inputSearchShainId,
+			shainName : inputSearchShainName,
+			bushoName : inputSearchBushoName
+		};
+	console.log(rq);
 	$
 			.ajax({
 				Type : 'GET',
 				url : '/kisoTeichaku/ShainSearchServlet',
 				dataType : 'json',
-				data : {
-					shainId : inputSearchShainId,
-					shainName : inputSearchShainName,
-					bushoName : inputSearchBushoName
-				},
+				data : rq,
 				success : function(data) {
 					console.log(data);
 					$('#shainInfo').html("");
