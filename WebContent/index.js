@@ -12,7 +12,22 @@ function check() {
 			url : '/kisoTeichaku/LoginServlet',
 			dataType : 'json',
 			data : {
-				loginRequest : 'login'
+				loginRequest : 'manager'
+			},
+			success : function(data) {
+				location.href = "/kisoTeichaku/shainList.html";
+			},
+			error : function() {
+				alert('データの通信に失敗しました。');
+			}
+		});
+	} else if (inputLoginId == "member" && inputPassword == "member") {
+		$.ajax({
+			type : 'get',
+			url : '/kisoTeichaku/LoginServlet',
+			dataType : 'json',
+			data : {
+				loginRequest : 'member'
 			},
 			success : function(data) {
 				location.href = "/kisoTeichaku/shainList.html";
@@ -23,10 +38,11 @@ function check() {
 		});
 	} else {
 		alert('IDもしくはパスワードが間違っています');
-
 	}
 }
 
 $(document).ready(function() {
 	$('#loginBtn').click(check);
-});
+});/**
+	 * 
+	 */

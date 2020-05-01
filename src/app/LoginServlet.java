@@ -42,8 +42,11 @@ public class LoginServlet extends HttpServlet {
 		String loginRequest = request.getParameter("loginRequest");
 		PrintWriter pw = response.getWriter();
 		if (status == null) {
-			if (loginRequest != null && loginRequest.equals("login")) {
-				session.setAttribute("login", "ok");
+			if (loginRequest != null && loginRequest.equals("manager")) {
+				session.setAttribute("login", "manager");
+				pw.append(new ObjectMapper().writeValueAsString("ログイン完了。"));
+			} else if (loginRequest != null && loginRequest.equals("member")) {
+				session.setAttribute("login", "member");
 				pw.append(new ObjectMapper().writeValueAsString("ログイン完了。"));
 			} else {
 				pw.append(new ObjectMapper().writeValueAsString("ログインして下さい。"));
