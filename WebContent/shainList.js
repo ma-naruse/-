@@ -1,30 +1,49 @@
 function showAllShain() {
 	console.log('全社員表示');
-	$.ajax({
-		type : 'GET',
-		url : '/kisoTeichaku/ShainAllListupServlet',
-		dataType : 'json',
-		success : function(data) {
-			console.log(data);
-			$('#shainList').append('<tr><th>社員ID</th><th>社員名</th><th>部署名</th></tr>')
-			for (var i = 0; i < data.length; i++) {
-				var shain = data[i];
-				$('#shainList').append(
-						'<tr><td>' + shain.shainId + '</td><td>'
-								+ shain.shainName + '</td><td>'
-								+shain.bushoName + '</td><td>'
-								+ '<button value="' + shain.shainId
-								+ '"onclick="jumpToEditPage(this)">編集</button>'
-								+ '</td><td>' + '<button value="'
-								+ shain.shainId
-								+ '" onclick="deleteShain(this)">削除</button>'
-								+ '</td></tr>');
-			}
-		},
-		error : function() {
-			alert('データの通信に失敗しました');
-		},
-	});
+	$
+			.ajax({
+				type : 'GET',
+				url : '/kisoTeichaku/ShainAllListupServlet',
+				dataType : 'json',
+				success : function(data) {
+					console.log(data);
+					if (data == "") {
+						$('#shainList').append("ログインしてください。");
+					} else {
+						$('#shainList')
+								.append(
+										'<tr><th>社員ID</th><th>社員名</th><th>部署名</th></tr>')
+						for (var i = 0; i < data.length; i++) {
+							var shain = data[i];
+							$('#shainList')
+									.append(
+											'<tr><td>'
+													+ shain.shainId
+													+ '</td><td>'
+													+ shain.shainName
+													+ '</td><td>'
+													+ shain.bushoName
+													+ '</td><td>'
+													+ '<button value="'
+													+ shain.shainId
+													+ '"onclick="jumpToEditPage(this)">編集</button>'
+													+ '</td><td>'
+													+ '<button value="'
+													+ shain.shainId
+													+ '" onclick="deleteShain(this)">削除</button>'
+													+ '</td></tr>');
+						}
+						var str = '';
+						str += '<button type="button" onclick="location.href=\'/kisoTeichaku/shainAdd.html\'">新規追加</button><br>'
+						str += '<button type="button" onclick="window.open().location.href=\'/kisoTeichaku/shainSearch.html\'">検索</button>'
+						$('#button').append(str);
+					}
+
+				},
+				error : function() {
+					alert('データの通信に失敗しました');
+				},
+			});
 }
 
 function jumpToEditPage(button) {

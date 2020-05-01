@@ -2,6 +2,7 @@ package app;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -36,7 +37,7 @@ public class LoginServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		response.setContentType("text/html;charset=UTF-8");
 
-		HttpSession session = request.getSession(true);//session(割符)の作成、ブラウザ側でのクッキーの発行
+		HttpSession session = request.getSession(true);
 		String status = (String) session.getAttribute("login");
 		String loginRequest = request.getParameter("loginRequest");
 		PrintWriter pw = response.getWriter();
@@ -55,6 +56,9 @@ public class LoginServlet extends HttpServlet {
 				pw.append(new ObjectMapper().writeValueAsString("ログイン済み"));
 			}
 		}
+		System.out.println("attributes");
+		for (Enumeration<String> attr = session.getAttributeNames(); attr.hasMoreElements();)
+			System.out.println(attr.nextElement());
 	}
 
 	/**
