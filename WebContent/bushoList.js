@@ -21,7 +21,7 @@ function showAllBusho(){
 
 function editBusho(button){
 	var query = $(button).val();
-	location.href = "./bushoEdit.html?="+query;
+	location.href = "./bushoEdit.html?="+query;  
 }
 
 function deleteBusho(button){
