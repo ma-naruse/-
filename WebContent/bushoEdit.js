@@ -19,14 +19,9 @@ function showBushoInfo() {
 				for (var i = 0; i < data.length; i++) {
 					var busho = data[i];
 					$('#bushoInfo').append(
-							'<div>部署ID:<span>' + busho.bushoId
-									+ '</span><input type="hidden"value="'
-									+ busho.bushoId
-									+ '"id="editBushoId"></input><br>'
-									+ '部署名<input type="text" value='
-									+ busho.bushoName
-									+ ' id="editBushoName"></input><br>'
-									+ '</div>');
+							'<div>部署ID:<span>' + busho.bushoId + '</span><input type="hidden"value="' + busho.bushoId
+									+ '"id="editBushoId"></input><br>' + '部署名<input type="text" value=' + busho.bushoName
+									+ ' id="editBushoName"></input><br>' + '</div>');
 				}
 			}
 		},
@@ -42,7 +37,6 @@ function editBushoInfo() {
 		bushoId : bushoId,
 		bushoName : bushoName
 	}
-
 	$.ajax({
 		type : 'POST',
 		url : '/kisoTeichaku/BushoEditServlet',

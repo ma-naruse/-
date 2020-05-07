@@ -4,8 +4,6 @@ function showAllBusho(){
 		url : '/kisoTeichaku/BushoAllListupServlet',
 		dataType : 'json',
 		success : function(data) {
-			console.log(data);
-			console.log(data.length);
 			$('#bushoList').html('');
 			$('#bushoList').append('<tr><th>部署ID</th><th>部署名</th></tr>');
 			for (var i = 0; i < data.length; i++) {
@@ -25,9 +23,8 @@ function editBusho(button){
 }
 
 function deleteBusho(button){
-	if (window.confirm('削除してよろしいですか？')) { // 確認ダイアログを表示
+	if (window.confirm('削除してよろしいですか？')) { 
 		var query = button.value;
-		console.log(query);
 		$.ajax({
 			type:'GET',
 			url:'/kisoTeichaku/BushoDeleteServlet',
@@ -42,10 +39,10 @@ function deleteBusho(button){
 				alert('削除できませんでした。');
 			}
 		});
-		return true; // 「OK」時は送信を実行
-	} else { // 「キャンセル」時の処理
-		window.alert('キャンセルされました'); // 警告ダイアログを表示
-		return false; // 送信を中止
+		return true; 
+	} else {
+		window.alert('キャンセルされました'); 
+		return false; 
 	}
 }
 

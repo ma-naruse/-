@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>経費申請ページ</title>
+<script type="text/javascript" src="jquery-1.10.2.js"></script>
+<script type="text/javascript" src="expenseAdd.js"></script>
+</head>
+<body>
+	<h1>経費申請ページ</h1>
+	申請する経費情報を下のフォームに入力して、「申請」ボタンを押してください。
+	<form id="expenseInfo">
+		申請ID:<span id="nextExpenseId"></span><input type="hidden" id="addExpenseId"></input>(自動)
+		<br>
+		項目名<input type="text" id="addExpenseItemName"></input>
+		<br>
+		金額<input type="text" id="addExpensePrice"></input>
+		<br>
+		日付<input type="text" id="addExpenseDate"></input>
+		<br>
+	</form>
+	<button id="addButton">申請</button>
+	<button id="cancelButton">キャンセル</button>
+</body>
+</html>

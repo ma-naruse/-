@@ -19,16 +19,16 @@ import javax.servlet.http.HttpSession;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Servlet implementation class ShainAllListup
+ * Servlet implementation class ExpenseListUpServlet
  */
-@WebServlet("/ShainAllListupServlet")
-public class ShainAllListupServlet extends HttpServlet {
+@WebServlet("/ExpenseListUpServlet")
+public class ExpenseListUpServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ShainAllListupServlet() {
+	public ExpenseListUpServlet() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -39,8 +39,9 @@ public class ShainAllListupServlet extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		response.setContentType("text/html; charset=Windows-31J");
-		System.out.println("全社員表示");
+		System.out.println("全経費表示");
 
 		HttpSession session = request.getSession(true);
 		String role = (String) session.getAttribute("role");
@@ -62,32 +63,30 @@ public class ShainAllListupServlet extends HttpServlet {
 			String user = "kiso";
 			String pass = "kiso";
 
-			String sql = "select \n" + "MS.SHAIN_ID ID \n" + ", MS.SHAIN_NAME NAME \n" + ", MS.SHAIN_AGE AGE \n" + ", MS.SHAIN_SEX SEX \n"
-					+ ", MS.SHAIN_POSTCD POSTCD \n" + ", MS.SHAIN_PREFECTURE PRE \n" + ", MS.SHAIN_ADDRESS ADDR \n" + ", MB.BUSHO_NAME BUSHONAME \n"
-					+ "from \n" + "MS_SHAIN MS \n" + ", MS_BUSHO MB \n" + "where 1=1 \n" + "and MS.SHAIN_BUSHOID = MB.BUSHO_ID \n"
-					+ "order by MS.SHAIN_ID ";
-			ShainListInfomation info = new ShainListInfomation();
+			String sql = "select \n" + "MS.SHAIN_ID SHAIN_ID, \n" + "MK.EXPENSE_ID ID, \n" + "MK.EXPENSE_YMD YMD, \n" + "MK.UPDATE_YMD UPDATEYMD, \n"
+					+ "MK.UPDATE_USER_ID UPDATER, \n" + "MK.ITEMNAME NAME, \n" + "MK.PRICE PRICE, \n" + "MK.STATUS STATUS, \n"
+					+ "MS.SHAIN_NAME INPUTER \n" + "from MS_KEIHI MK, \n" + "MS_SHAIN MS \n" + "where MK.INPUT_USER_ID = MS.SHAIN_ID \n"
+					// + "and INPUT_USER_ID = '" + loginId + "' \n"
+					+ "order by EXPENSE_ID";
+			ExpenseListInformation info = new ExpenseListInformation();
 			info.setLoginId(loginId);
 			info.setRole(role);
-			List<Shain> shainList = new ArrayList<>();
-			try ( // データベースへ接続します
-					Connection con = DriverManager.getConnection(url, user, pass); // SQLの命令文を実行するための準備をおこないます
-					Statement stmt = con.createStatement(); // SQLの命令文を実行し、その結果をResultSet型のrsに代入します
+			List<Expense> expenseList = new ArrayList<>();
+			try (Connection con = DriverManager.getConnection(url, user, pass);
+					Statement stmt = con.createStatement();
 					ResultSet rs1 = stmt.executeQuery(sql);) {
 				while (rs1.next()) {
-					Shain shain = new Shain();
-					shain.setShainId(rs1.getString("ID"));
-					shain.setShainName(rs1.getString("NAME"));
-					shain.setBushoName(rs1.getString("BUSHONAME"));
-					/*
-					 * shain.setShainAge(rs1.getInt("SHAIN_AGE"));
-					 * shain.setShainPostCd(rs1.getString("SHAIN_POSTCD"));
-					 * shain.setShainPrefecture(rs1.getString("SHAIN_PREFECTURE"
-					 * ));
-					 * shain.setShainAddress(rs1.getString("SHAIN_ADDRESS"));
-					 */
-					shainList.add(shain);
-
+					Expense expense = new Expense();
+					expense.setExpenseId(rs1.getString("ID"));
+					expense.setDate(rs1.getString("YMD"));
+					expense.setUpdateDate(rs1.getString("UPDATEYMD"));
+					expense.setUpdateUser(rs1.getString("UPDATER"));
+					expense.setItemName(rs1.getString("NAME"));
+					expense.setPrice(rs1.getInt("PRICE"));
+					expense.setStatus(rs1.getString("STATUS"));
+					expense.setInputUserName(rs1.getString("INPUTER"));
+					expense.setInputUserId(rs1.getString("SHAIN_ID"));
+					expenseList.add(expense);
 				}
 
 				// SQL実行後の処理内容
@@ -97,7 +96,7 @@ public class ShainAllListupServlet extends HttpServlet {
 				throw new RuntimeException(String.format("検索処理の実施中にエラーが発生しました。	詳細:[%s]", e.getMessage()), e);
 
 			}
-			info.setShainList(shainList);
+			info.setExpenseList(expenseList);
 			pw.append(new ObjectMapper().writeValueAsString(info));
 		}
 	}

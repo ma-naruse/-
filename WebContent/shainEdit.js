@@ -3,59 +3,31 @@ function showShainInfo() {
 	parameter = decodeURIComponent(parameter);
 	parameter = parameter.split('=')[1];
 	console.log(parameter);
-	$
-			.ajax({
-				Type : 'GET',
-				url : '/kisoTeichaku/ShainEditServlet',
-				dataType : 'json',
-				data : {
-					shainId : parameter
-				},
-				success : function(data) {
-					console.log(data);
-					$('#shainInfo').html("");
-					if (data[0] == undefined) {
-						alert('該当する社員は存在しません');
-					} else {
-						for (var i = 0; i < data.length; i++) {
-							var shain = data[i];
-							$('#shainInfo')
-									.append(
-											'<div>社員ID:<span>'
-													+ shain.shainId
-													+ '</span><input type="hidden"value="'
-													+ shain.shainId
-													+ '"id="editShainId"></input><br>'
-													+ '社員名<input type="text" value='
-													+ shain.shainName
-													+ ' id="editShainName"></input><br>'
-													+ '年齢<input type="text" value='
-													+ shain.shainAge
-													+ ' id="editShainAge"></input><br>'
-													+ '性別<input type="text" value='
-													+ shain.shainSex
-													+ ' id="editShainSex"></input><br>'
-													+ '郵便番号<input type="text" value='
-													+ shain.shainPostCd
-													+ ' id="editShainPostCd"></input><br>'
-													+ '居住都道府県<select id="editShainPrefecture"><option>'
-													+ shain.shainPrefecture
-													+ '</option></select><br>'
-													+ '住所<input type="text" value='
-													+ shain.shainAddress
-													+ ' id="editShainAddress"></input><br>'
-													+ '所属部署<select id="editBushoName"><option>'
-													+ shain.bushoName
-													+ '</option>' + '</div>');
-						}
-					}
-					listUpPrefecture();
-					listUpBushoName();
-				},
-				error : function() {
-					alert('データの通信に失敗しました');
-				},
-			});
+	$.ajax({
+		Type : 'GET',
+		url : '/kisoTeichaku/ShainEditServlet',
+		dataType : 'json',
+		data : {
+			shainId : parameter
+		},
+		success : function(data) {
+			console.log(data);
+			$('#shainInfo').html("");
+			if (data[0] == undefined) {
+				alert('該当する社員は存在しません');
+			} else {
+				for (var i = 0; i < data.length; i++) {
+					var shain = data[i];
+					$('#shainInfo').append('<div>社員ID:<span>' + shain.shainId + '</span><input type="hidden"value="' + shain.shainId + '"id="editShainId"></input><br>' + '社員名<input type="text" value=' + shain.shainName + ' id="editShainName"></input><br>' + '年齢<input type="text" value=' + shain.shainAge + ' id="editShainAge"></input><br>' + '性別<input type="text" value=' + shain.shainSex + ' id="editShainSex"></input><br>' + '郵便番号<input type="text" value=' + shain.shainPostCd + ' id="editShainPostCd"></input><br>' + '居住都道府県<select id="editShainPrefecture"><option>' + shain.shainPrefecture + '</option></select><br>' + '住所<input type="text" value=' + shain.shainAddress + ' id="editShainAddress"></input><br>' + '所属部署<select id="editBushoName"><option>' + shain.bushoName + '</option>' + '</div>');
+				}
+			}
+			listUpPrefecture();
+			listUpBushoName();
+		},
+		error : function() {
+			alert('データの通信に失敗しました');
+		},
+	});
 }
 function listUpBushoName() {
 	$.ajax({
@@ -63,13 +35,9 @@ function listUpBushoName() {
 		url : '/kisoTeichaku/BushoAllListupServlet',
 		dataType : 'json',
 		success : function(data) {
-			console.log(data);
-			console.log(data.length);
 			for (var i = 0; i < data.length; i++) {
 				var busho = data[i];
-				console.log(busho.bushoName);
-				$('#editBushoName').append(
-						'<option>' + busho.bushoName + '</option>');
+				$('#editBushoName').append('<option>' + busho.bushoName + '</option>');
 			}
 		},
 		error : function() {
@@ -84,13 +52,9 @@ function listUpPrefecture() {
 		url : '/kisoTeichaku/GetPrefecture',
 		dataType : 'json',
 		success : function(data) {
-			console.log(data);
-			console.log(data.length);
 			for (var i = 0; i < data.length; i++) {
 				var pref = data[i];
-				console.log(pref.name);
-				$('#editShainPrefecture').append(
-						'<option>' + pref.name + '</option>');
+				$('#editShainPrefecture').append('<option>' + pref.name + '</option>');
 			}
 		},
 		error : function() {
@@ -109,9 +73,6 @@ function editShainInfo() {
 	var shainPrefecture = $('#editShainPrefecture').val();
 	var shainAddress = $('#editShainAddress').val();
 	var bushoName = $('#editBushoName').val();
-	console.log(shainId);
-	console.log(shainName);
-	console.log(shainSex);
 	var requestQuery = {
 		shainId : shainId,
 		shainName : shainName,
@@ -122,7 +83,6 @@ function editShainInfo() {
 		shainAddress : shainAddress,
 		bushoName : bushoName
 	}
-
 	$.ajax({
 		type : 'POST',
 		url : '/kisoTeichaku/ShainEditServlet',

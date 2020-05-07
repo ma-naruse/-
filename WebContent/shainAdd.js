@@ -4,15 +4,14 @@ function countShain() {
 		url : '/kisoTeichaku/ShainAllListupServlet',
 		dataType : 'json',
 		success : function(data) {
-			var ret = ('000' + (data.length+1)).slice(-4);
-			 $('#nextShainId').html(ret);
-			 $('#addShainId').val(ret);
+			var ret = ('000' + (data.shainList.length + 1)).slice(-4);
+			$('#nextShainId').html(ret);
+			$('#addShainId').val(ret);
 		},
 		error : function() {
 			alert('データの通信に失敗しました。');
 		}
 	});
-	console.log('count');
 }
 
 function listUpBushoName() {
@@ -24,9 +23,7 @@ function listUpBushoName() {
 			$('#addBushoName').append('<option value="">選択してください</option>');
 			for (var i = 0; i < data.length; i++) {
 				var busho = data[i];
-				console.log(busho.bushoName);
-				$('#addBushoName').append(
-						'<option>' + busho.bushoName + '</option>');
+				$('#addBushoName').append('<option>' + busho.bushoName + '</option>');
 			}
 		},
 		error : function() {
@@ -41,12 +38,10 @@ function listUpPrefecture() {
 		url : '/kisoTeichaku/GetPrefecture',
 		dataType : 'json',
 		success : function(data) {
-			$('#addShainPrefecture').append(
-					'<option value="">選択してください</option>');
+			$('#addShainPrefecture').append('<option value="">選択してください</option>');
 			for (var i = 0; i < data.length; i++) {
 				var pref = data[i];
-				$('#addShainPrefecture').append(
-						'<option>' + pref.name + '</option>');
+				$('#addShainPrefecture').append('<option>' + pref.name + '</option>');
 			}
 		},
 		error : function() {
@@ -64,9 +59,6 @@ function addShain() {
 	var shainPrefecture = $('#addShainPrefecture').val();
 	var shainAddress = $('#addShainAddress').val();
 	var bushoName = $('#addBushoName').val();
-	console.log(shainId);
-	console.log(shainName);
-	console.log(shainSex);
 	var requestQuery = {
 		shainId : shainId,
 		shainName : shainName,

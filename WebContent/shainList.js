@@ -1,49 +1,50 @@
 function showAllShain() {
 	console.log('全社員表示');
-	$
-			.ajax({
-				type : 'GET',
-				url : '/kisoTeichaku/ShainAllListupServlet',
-				dataType : 'json',
-				success : function(data) {
-					console.log(data);
-					if (data == "") {
-						$('#shainList').append("ログインしてください。");
-					} else {
-						$('#shainList')
-								.append(
-										'<tr><th>社員ID</th><th>社員名</th><th>部署名</th></tr>')
-						for (var i = 0; i < data.length; i++) {
-							var shain = data[i];
-							$('#shainList')
-									.append(
-											'<tr><td>'
-													+ shain.shainId
-													+ '</td><td>'
-													+ shain.shainName
-													+ '</td><td>'
-													+ shain.bushoName
-													+ '</td><td>'
-													+ '<button value="'
-													+ shain.shainId
-													+ '"onclick="jumpToEditPage(this)">編集</button>'
-													+ '</td><td>'
-													+ '<button value="'
-													+ shain.shainId
-													+ '" onclick="deleteShain(this)">削除</button>'
-													+ '</td></tr>');
-						}
-						var str = '';
-						str += '<button type="button" onclick="location.href=\'/kisoTeichaku/shainAdd.html\'">新規追加</button><br>'
-						str += '<button type="button" onclick="window.open().location.href=\'/kisoTeichaku/shainSearch.html\'">検索</button>'
-						$('#button').append(str);
+	$.ajax({
+		type : 'GET',
+		url : '/kisoTeichaku/ShainAllListupServlet',
+		dataType : 'json',
+		success : function(data) {
+			console.log(data);
+			if (data == null) {
+				$('#shainList').append("ログインしてください。");
+			} else {
+				$('#shainList').append('<tr><th>社員ID</th><th>社員名</th><th>部署名</th></tr>')
+				var loginId = data.loginId;
+				console.log(loginId);
+				sessionStorage.setItem('loginId', loginId);
+				var role = data.role;
+				console.log(role);
+				sessionStorage.setItem('role', role);
+				for (var i = 0; i < data.shainList.length; i++) {
+					var shain = data.shainList[i];
+					console.log(shain);
+					var tableStr = '';
+					tableStr += '<tr>';
+					tableStr += '<td>' + shain.shainId + '</td>';
+					tableStr += '<td>' + shain.shainName + '</td>';
+					tableStr += '<td>' + shain.bushoName + '</td>';
+					if (role == 'manager' || loginId == shain.shainId) {
+						tableStr += '<td><button value="' + shain.shainId + '"onclick="jumpToEditPage(this)">編集</button></td>';
 					}
+					if (role == 'manager') {
+						tableStr += '<td><button value="' + shain.shainId + '" onclick="deleteShain(this)">削除</button></td>';
+					}
+					tableStr += '</tr>';
+					$('#shainList').append(tableStr);
+				}
+				var str = '';
+				str += '<button onclick="jumpToAddPage()">新規追加</button><br>';
+				str += '<button onclick="window.open().location.href=\'/kisoTeichaku/shainSearch.html\'">検索</button><br>';
+				str += '<button onclick="logout()">ログアウト</button>'
+				$('#button').append(str);
+			}
 
-				},
-				error : function() {
-					alert('データの通信に失敗しました');
-				},
-			});
+		},
+		error : function() {
+			alert('データの通信に失敗しました');
+		}
+	});
 }
 
 function jumpToEditPage(button) {
@@ -51,8 +52,12 @@ function jumpToEditPage(button) {
 	location.href = "./shainEdit.html?=" + query;
 }
 
+function jumpToAddPage() {
+	location.href = '/kisoTeichaku/shainAdd.html';
+}
+
 function deleteShain(button) {
-	if (window.confirm('削除してよろしいですか？')) { // 確認ダイアログを表示
+	if (window.confirm('削除してよろしいですか？')) {
 		var q = $(button).val();
 		$.ajax({
 			type : 'POST',
@@ -69,26 +74,29 @@ function deleteShain(button) {
 				alert('データの通信に失敗しました。');
 			}
 		});
-		return true; // 「OK」時は送信を実行
-	} else { // 「キャンセル」時の処理
-		window.alert('キャンセルされました'); // 警告ダイアログを表示
-		return false; // 送信を中止
+		return true;
+	} else {
+		window.alert('キャンセルされました');
+		return false;
 	}
 }
 
-function deleteCheck() {
-
-	if (window.confirm('削除してよろしいですか？')) { // 確認ダイアログを表示
-
-		return true; // 「OK」時は送信を実行
-
-	} else { // 「キャンセル」時の処理
-
-		window.alert('キャンセルされました'); // 警告ダイアログを表示
-		return false; // 送信を中止
-
-	}
-
+function logout() {
+	$.ajax({
+		type : 'POST',
+		url : '/kisoTeichaku/LoginServlet',
+		dataType : 'json',
+		data : {
+			loginRequest : 'logout'
+		},
+		success : function(data) {
+			alert('ログアウトしました。');
+			location.href = '/kisoTeichaku/index.html';
+		},
+		error : function() {
+			alert('データの通信に失敗しました。');
+		}
+	});
 }
 
 $(document).ready(function() {
