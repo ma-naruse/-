@@ -34,7 +34,9 @@ function showAllShain() {
 					$('#shainList').append(tableStr);
 				}
 				var str = '';
-				str += '<button onclick="jumpToAddPage()">新規追加</button><br>';
+				if (role == 'manager') {
+					str += '<button onclick="jumpToAddPage()">新規追加</button><br>';
+				}
 				str += '<button onclick="window.open().location.href=\'/kisoTeichaku/shainSearch.html\'">検索</button><br>';
 				str += '<button onclick="logout()">ログアウト</button>'
 				$('#button').append(str);

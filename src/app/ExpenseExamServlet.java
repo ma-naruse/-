@@ -18,16 +18,16 @@ import javax.servlet.http.HttpSession;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Servlet implementation class ExpenseAddServlet
+ * Servlet implementation class ExpenseExamServlet
  */
-@WebServlet("/ExpenseAddServlet")
-public class ExpenseAddServlet extends HttpServlet {
+@WebServlet("/ExpenseExamServlet")
+public class ExpenseExamServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ExpenseAddServlet() {
+	public ExpenseExamServlet() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -49,21 +49,23 @@ public class ExpenseAddServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.setContentType("text/html;charset=UTF-8");
-		HttpSession session = request.getSession(true);
-		String loginId = (String) session.getAttribute("loginId");
-
+		response.setContentType("text/html; charset=Windows-31J");
 		String expenseId = request.getParameter("expenseId");
-		String itemName = request.getParameter("itemName");
-		String price = request.getParameter("price");
 		String status = request.getParameter("status");
+		String reason = request.getParameter("reason");
+		System.out.println(expenseId);
 		System.out.println(status);
-		System.out.println("POST:" + itemName);
-		System.out.println("POST:" + expenseId);
+		System.out.println(reason);
 
 		Date date = new Date();
 		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
 		String ymd = format.format(date);
+
+		HttpSession session = request.getSession(true);
+		String role = (String) session.getAttribute("role");
+		String loginId = (String) session.getAttribute("loginId");
+		System.out.println(role);
+		System.out.println(loginId);
 
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -75,8 +77,12 @@ public class ExpenseAddServlet extends HttpServlet {
 		String user = "kiso";
 		String password = "kiso";
 
-		String sql = "INSERT INTO MS_KEIHI (EXPENSE_ID, EXPENSE_YMD, ITEMNAME, PRICE, INPUT_USER_ID, STATUS ) \n" + "values ('" + expenseId + "','"
-				+ ymd + "', '" + itemName + "', " + price + ",'" + loginId + "','" + status + "')";
+		String sql = "update MS_KEIHI set UPDATE_YMD = '" + ymd + "', UPDATE_USER_ID = '" + loginId + "' ,STATUS = '" + status + "'";
+		if (reason != null) {
+			sql += ", DESCRIPTION = '" + reason + "'";
+		}
+		sql += "  where EXPENSE_ID = '" + expenseId + "'";
+
 		try (Connection con = DriverManager.getConnection(url, user, password); Statement stmt = con.createStatement();) {
 			@SuppressWarnings("unused")
 			int resultCount = stmt.executeUpdate(sql);
