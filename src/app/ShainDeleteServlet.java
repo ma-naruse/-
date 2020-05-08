@@ -2,9 +2,6 @@ package app;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,47 +27,30 @@ public class ShainDeleteServlet extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String shainId = request.getParameter("shainId");
 		System.out.println("delete:" + shainId);
-
-		try { //JDBCの準備
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(String.format("JDBCドライバのロードに失敗しました。詳細:[%s]", e.getMessage()), e);
-		}
-
+		DatabaseConnection.driverLoad();
 		String url = "jdbc:oracle:thin:@localhost:1521:XE";
 		String user = "kiso";
-		String password = "kiso";
+		String pass = "kiso";
 
-		String deleteSql = "delete MS_SHAIN \n" +
-				"where SHAIN_ID = '" + shainId + "'";
-		String commitSql = "commit";
-
-		try (
-				Connection con = DriverManager.getConnection(url, user, password);
-				Statement stmt = con.createStatement();) {
-			@SuppressWarnings("unused")
-			int resultCount1 = stmt.executeUpdate(deleteSql);
-			@SuppressWarnings("unused")
-			int resultCount2 = stmt.executeUpdate(commitSql);
-		} catch (Exception e) {
-			throw new RuntimeException(String.format("検索処理の実行中にエラーが発生しました。詳細:[%s]", e.getMessage()), e);
-		}
-
+		String sql = "delete MS_SHAIN \n" + "where SHAIN_ID = '" + shainId + "'";
+		DatabaseConnection.executeSql(url, user, pass, sql);
 		PrintWriter pw = response.getWriter();
 		pw.append(new ObjectMapper().writeValueAsString("ok"));
 	}

@@ -32,11 +32,11 @@ public class ShainSearchServlet extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html; charset=Windows-31J");
 		System.out.println("社員検索");
 		String shainId = request.getParameter("shainId");
@@ -45,32 +45,16 @@ public class ShainSearchServlet extends HttpServlet {
 		System.out.println(shainName);
 		String bushoName = request.getParameter("bushoName");
 
-		try { //JDBCの準備
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			System.out.println(bushoName);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(String.format("JDBCドライバのロードに失敗しました。詳細:[%s]", e.getMessage()), e);
-		}
+		DatabaseConnection.driverLoad();
 		String url = "jdbc:oracle:thin:@localhost:1521:XE";
 		String user = "kiso";
 		String pass = "kiso";
 
 		List<Shain> shainList = new ArrayList<>();
 
-		String sql = "select \n" +
-				"MS.SHAIN_ID ID \n" +
-				", MS.SHAIN_NAME NAME \n" +
-				", MS.SHAIN_AGE AGE \n" +
-				", MS.SHAIN_SEX SEX \n" +
-				", MS.SHAIN_POSTCD POSTCD \n" +
-				", MS.SHAIN_PREFECTURE PRE \n" +
-				", MS.SHAIN_ADDRESS ADDRESS \n" +
-				", MB.BUSHO_NAME BN \n" +
-				"from \n" +
-				"MS_SHAIN MS \n" +
-				", MS_BUSHO MB \n" +
-				"where 1=1 \n" +
-				"and MS.SHAIN_BUSHOID = MB.BUSHO_ID \n";
+		String sql = "select \n" + "MS.SHAIN_ID ID \n" + ", MS.SHAIN_NAME NAME \n" + ", MS.SHAIN_AGE AGE \n" + ", MS.SHAIN_SEX SEX \n"
+				+ ", MS.SHAIN_POSTCD POSTCD \n" + ", MS.SHAIN_PREFECTURE PRE \n" + ", MS.SHAIN_ADDRESS ADDRESS \n" + ", MB.BUSHO_NAME BN \n"
+				+ "from \n" + "MS_SHAIN MS \n" + ", MS_BUSHO MB \n" + "where 1=1 \n" + "and MS.SHAIN_BUSHOID = MB.BUSHO_ID \n";
 
 		if (!("".equals(shainId))) {
 			sql += "and MS.SHAIN_ID = '" + shainId + "' \n";
@@ -84,11 +68,9 @@ public class ShainSearchServlet extends HttpServlet {
 		sql += "order by MB.BUSHO_ID";
 
 		System.out.println(sql);
-		try ( // データベースへ接続します 
-				Connection con = DriverManager.getConnection(url, user, pass); // SQLの命令文を実行するための準備をおこないます
-				Statement stmt = con.createStatement(); // SQLの命令文を実行し、その結果をResultSet型のrsに代入します 
+		try (Connection con = DriverManager.getConnection(url, user, pass);
+				Statement stmt = con.createStatement();
 				ResultSet rs1 = stmt.executeQuery(sql);) {
-			// SQL実行後の処理内容 
 			while (rs1.next()) {
 				Shain shain = new Shain();
 				shain.setShainId(rs1.getString("ID"));
@@ -102,20 +84,18 @@ public class ShainSearchServlet extends HttpServlet {
 				shainList.add(shain);
 			}
 		} catch (Exception e) {
-
 			throw new RuntimeException(String.format("検索処理の実施中にエラーが発生しました。	詳細:[%s]", e.getMessage()), e);
-
 		}
 		PrintWriter pw = response.getWriter();
 		pw.append(new ObjectMapper().writeValueAsString(shainList));
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

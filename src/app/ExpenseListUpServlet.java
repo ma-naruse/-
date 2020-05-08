@@ -7,7 +7,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -54,11 +56,7 @@ public class ExpenseListUpServlet extends HttpServlet {
 		if (role == null) {
 			pw.append(new ObjectMapper().writeValueAsString(role));
 		} else {
-			try { // JDBCの準備
-				Class.forName("oracle.jdbc.driver.OracleDriver");
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(String.format("JDBCドライバのロードに失敗しました。詳細:[%s]", e.getMessage()), e);
-			}
+			DatabaseConnection.driverLoad();
 			String url = "jdbc:oracle:thin:@localhost:1521:XE";
 			String user = "kiso";
 			String pass = "kiso";
@@ -68,9 +66,9 @@ public class ExpenseListUpServlet extends HttpServlet {
 					+ "MK.STATUS STATUS,  \n" + "MS.SHAIN_NAME INPUTER, \n" + "MK.DESCRIPTION DESCRIPTION \n" + "from MS_KEIHI MK,  \n"
 					+ "MS_SHAIN MS ,  \n" + "MS_SHAIN MU  \n" + "where MK.INPUT_USER_ID = MS.SHAIN_ID  \n"
 					+ "and MU.SHAIN_ID(+) = MK.UPDATE_USER_ID  \n" + "order by EXPENSE_ID ";
-			ExpenseListInformation info = new ExpenseListInformation();
-			info.setLoginId(loginId);
-			info.setRole(role);
+			Map<String, Object> data = new HashMap<>();
+			data.put("loginId", loginId);
+			data.put("role", role);
 			List<Expense> expenseList = new ArrayList<>();
 			try (Connection con = DriverManager.getConnection(url, user, pass);
 					Statement stmt = con.createStatement();
@@ -89,16 +87,11 @@ public class ExpenseListUpServlet extends HttpServlet {
 					expense.setDescription(rs1.getString("DESCRIPTION"));
 					expenseList.add(expense);
 				}
-
-				// SQL実行後の処理内容
-
 			} catch (Exception e) {
-
 				throw new RuntimeException(String.format("検索処理の実施中にエラーが発生しました。	詳細:[%s]", e.getMessage()), e);
-
 			}
-			info.setExpenseList(expenseList);
-			pw.append(new ObjectMapper().writeValueAsString(info));
+			data.put("expenseList", expenseList);
+			pw.append(new ObjectMapper().writeValueAsString(data));
 		}
 	}
 

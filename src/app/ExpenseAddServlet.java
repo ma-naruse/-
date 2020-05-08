@@ -2,9 +2,6 @@ package app;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -57,33 +54,18 @@ public class ExpenseAddServlet extends HttpServlet {
 		String itemName = request.getParameter("itemName");
 		String price = request.getParameter("price");
 		String status = request.getParameter("status");
-		System.out.println(status);
-		System.out.println("POST:" + itemName);
-		System.out.println("POST:" + expenseId);
 
 		Date date = new Date();
 		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
 		String ymd = format.format(date);
 
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(String.format("JDBCドライバーのロードに失敗しました。詳細:[%s]", e.getMessage()), e);
-		}
-
+		DatabaseConnection.driverLoad();
 		String url = "jdbc:oracle:thin:@localhost:1521:XE";
 		String user = "kiso";
-		String password = "kiso";
-
+		String pass = "kiso";
 		String sql = "INSERT INTO MS_KEIHI (EXPENSE_ID, EXPENSE_YMD, ITEMNAME, PRICE, INPUT_USER_ID, STATUS ) \n" + "values ('" + expenseId + "','"
 				+ ymd + "', '" + itemName + "', " + price + ",'" + loginId + "','" + status + "')";
-		try (Connection con = DriverManager.getConnection(url, user, password); Statement stmt = con.createStatement();) {
-			@SuppressWarnings("unused")
-			int resultCount = stmt.executeUpdate(sql);
-
-		} catch (Exception e) {
-			throw new RuntimeException(String.format("検索処理の実行中にエラーが発生しました。詳細:[%s]", e.getMessage()), e);
-		}
+		DatabaseConnection.executeSql(url, user, pass, sql);
 		PrintWriter pw = response.getWriter();
 		pw.append(new ObjectMapper().writeValueAsString("ok"));
 	}

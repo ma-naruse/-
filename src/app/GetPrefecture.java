@@ -23,34 +23,31 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @WebServlet("/GetPrefecture")
 public class GetPrefecture extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public GetPrefecture() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
+	public GetPrefecture() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html; charset=Windows-31J");
-		try { //JDBCの準備
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(String.format("JDBCドライバのロードに失敗しました。詳細:[%s]", e.getMessage()), e);
-		}
+		DatabaseConnection.driverLoad();
 		String url = "jdbc:oracle:thin:@localhost:1521:XE";
 		String user = "kiso";
 		String pass = "kiso";
 
 		String sql = "select * from PREFECTURE order by id";
 		List<Prefecture> prefList = new ArrayList<>();
-		try ( // データベースへ接続します 
-				Connection con = DriverManager.getConnection(url, user, pass); // SQLの命令文を実行するための準備をおこないます
-				Statement stmt = con.createStatement(); // SQLの命令文を実行し、その結果をResultSet型のrsに代入します 
+		try (Connection con = DriverManager.getConnection(url, user, pass);
+				Statement stmt = con.createStatement();
 				ResultSet rs1 = stmt.executeQuery(sql);) {
 			while (rs1.next()) {
 				Prefecture pref = new Prefecture();
@@ -59,22 +56,18 @@ public class GetPrefecture extends HttpServlet {
 				pref.setNameKana(rs1.getString("NAME_KANA"));
 				prefList.add(pref);
 			}
-
-			// SQL実行後の処理内容 
-
 		} catch (Exception e) {
-
 			throw new RuntimeException(String.format("検索処理の実施中にエラーが発生しました。	詳細:[%s]", e.getMessage()), e);
-
 		}
-
 		PrintWriter pw = response.getWriter();
 		pw.append(new ObjectMapper().writeValueAsString(prefList));
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);

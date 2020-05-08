@@ -2,9 +2,6 @@ package app;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -67,29 +64,19 @@ public class ExpenseExamServlet extends HttpServlet {
 		System.out.println(role);
 		System.out.println(loginId);
 
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(String.format("JDBCドライバーのロードに失敗しました。詳細:[%s]", e.getMessage()), e);
-		}
+		DatabaseConnection.driverLoad();
 
 		String url = "jdbc:oracle:thin:@localhost:1521:XE";
 		String user = "kiso";
-		String password = "kiso";
+		String pass = "kiso";
 
 		String sql = "update MS_KEIHI set UPDATE_YMD = '" + ymd + "', UPDATE_USER_ID = '" + loginId + "' ,STATUS = '" + status + "'";
 		if (reason != null) {
 			sql += ", DESCRIPTION = '" + reason + "'";
 		}
-		sql += "  where EXPENSE_ID = '" + expenseId + "'";
+		sql += " where EXPENSE_ID = '" + expenseId + "'";
 
-		try (Connection con = DriverManager.getConnection(url, user, password); Statement stmt = con.createStatement();) {
-			@SuppressWarnings("unused")
-			int resultCount = stmt.executeUpdate(sql);
-
-		} catch (Exception e) {
-			throw new RuntimeException(String.format("検索処理の実行中にエラーが発生しました。詳細:[%s]", e.getMessage()), e);
-		}
+		DatabaseConnection.executeSql(url, user, pass, sql);
 		PrintWriter pw = response.getWriter();
 		pw.append(new ObjectMapper().writeValueAsString("ok"));
 	}

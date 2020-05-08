@@ -7,7 +7,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -66,13 +68,12 @@ public class ShainAllListupServlet extends HttpServlet {
 					+ ", MS.SHAIN_POSTCD POSTCD \n" + ", MS.SHAIN_PREFECTURE PRE \n" + ", MS.SHAIN_ADDRESS ADDR \n" + ", MB.BUSHO_NAME BUSHONAME \n"
 					+ "from \n" + "MS_SHAIN MS \n" + ", MS_BUSHO MB \n" + "where 1=1 \n" + "and MS.SHAIN_BUSHOID = MB.BUSHO_ID \n"
 					+ "order by MS.SHAIN_ID ";
-			ShainListInfomation info = new ShainListInfomation();
-			info.setLoginId(loginId);
-			info.setRole(role);
+			Map<String, Object> data = new HashMap<>();
+			data.put("loginId", loginId);
+			data.put("role", role);
 			List<Shain> shainList = new ArrayList<>();
-			try ( // データベースへ接続します
-					Connection con = DriverManager.getConnection(url, user, pass); // SQLの命令文を実行するための準備をおこないます
-					Statement stmt = con.createStatement(); // SQLの命令文を実行し、その結果をResultSet型のrsに代入します
+			try (Connection con = DriverManager.getConnection(url, user, pass);
+					Statement stmt = con.createStatement();
 					ResultSet rs1 = stmt.executeQuery(sql);) {
 				while (rs1.next()) {
 					Shain shain = new Shain();
@@ -90,15 +91,11 @@ public class ShainAllListupServlet extends HttpServlet {
 
 				}
 
-				// SQL実行後の処理内容
-
 			} catch (Exception e) {
-
 				throw new RuntimeException(String.format("検索処理の実施中にエラーが発生しました。	詳細:[%s]", e.getMessage()), e);
-
 			}
-			info.setShainList(shainList);
-			pw.append(new ObjectMapper().writeValueAsString(info));
+			data.put("shainList", shainList);
+			pw.append(new ObjectMapper().writeValueAsString(data));
 		}
 	}
 

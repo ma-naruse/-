@@ -54,7 +54,7 @@ function bushoAdd(){
 			bushoName : addbushoName
 	};
 	$.ajax({
-		type:'GET',
+		type:'POST',
 		url:'/kisoTeichaku/BushoAddServlet',
 		data:requestQuery,
 		success:function(){

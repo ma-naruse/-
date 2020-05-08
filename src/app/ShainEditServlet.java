@@ -100,19 +100,14 @@ public class ShainEditServlet extends HttpServlet {
 		System.out.println("POST:" + shainName);
 		System.out.println("POST:" + shainId);
 
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(String.format("JDBCドライバーのロードに失敗しました。詳細:[%s]", e.getMessage()), e);
-		}
-
+		DatabaseConnection.driverLoad();
 		String url = "jdbc:oracle:thin:@localhost:1521:XE";
 		String user = "kiso";
-		String password = "kiso";
+		String pass = "kiso";
 
 		String sqlForBushoId = "select BUSHO_ID from MS_BUSHO MB where MB.BUSHO_NAME = '" + bushoName + "'";
 		String bushoId = "";
-		try (Connection con = DriverManager.getConnection(url, user, password);
+		try (Connection con = DriverManager.getConnection(url, user, pass);
 				Statement stmt = con.createStatement();
 				ResultSet rs1 = stmt.executeQuery(sqlForBushoId);) {
 			while (rs1.next()) {
@@ -126,15 +121,8 @@ public class ShainEditServlet extends HttpServlet {
 		String sql = "update MS_SHAIN set SHAIN_NAME = '" + shainName + "', SHAIN_AGE ='" + shainAge + "', SHAIN_SEX ='" + shainSex
 				+ "', SHAIN_POSTCD = '" + shainPostCd + "', SHAIN_PREFECTURE ='" + shainPrefecture + "', SHAIN_ADDRESS='" + shainAddress
 				+ "', SHAIN_BUSHOID ='" + bushoId + "' where SHAIN_ID ='" + shainId + "'";
-		System.out.println(sql);
 
-		try (Connection con = DriverManager.getConnection(url, user, password); Statement stmt = con.createStatement();) {
-			@SuppressWarnings("unused")
-			int resultCount = stmt.executeUpdate(sql);
-
-		} catch (Exception e) {
-			throw new RuntimeException(String.format("検索処理の実行中にエラーが発生しました。詳細:[%s]", e.getMessage()), e);
-		}
+		DatabaseConnection.executeSql(url, user, pass, sql);
 		PrintWriter pw = response.getWriter();
 		pw.append(new ObjectMapper().writeValueAsString("ok"));
 	}

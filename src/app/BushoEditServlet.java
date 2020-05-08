@@ -23,44 +23,34 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @WebServlet("/BushoEditServlet")
 public class BushoEditServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public BushoEditServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
+	public BushoEditServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html; charset=Windows-31J");
 		String bushoId = request.getParameter("bushoId");
-
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(String.format("JDBCドライバのロードに失敗しました。詳細:[%s]", e.getMessage()), e);
-		}
-
+		DatabaseConnection.driverLoad();
 		String url = "jdbc:oracle:thin:@localhost:1521:XE";
 		String user = "kiso";
 		String pass = "kiso";
 
-		String sql = "select \n" +
-				"MB.BUSHO_ID ID \n" +
-				", MB.BUSHO_NAME NAME \n" +
-				"from \n" +
-				"MS_BUSHO MB \n"+
-				"where 1=1 \n" +
-				"and MB.BUSHO_ID = '" + bushoId + "'";
+		String sql = "select \n" + "MB.BUSHO_ID ID \n" + ", MB.BUSHO_NAME NAME \n" + "from \n" + "MS_BUSHO MB \n" + "where 1=1 \n"
+				+ "and MB.BUSHO_ID = '" + bushoId + "'";
 
 		List<Busho> bushoList = new ArrayList<>();
 
-		try (
-				Connection con = DriverManager.getConnection(url, user, pass);
+		try (Connection con = DriverManager.getConnection(url, user, pass);
 				Statement stmt = con.createStatement();
 				ResultSet rs1 = stmt.executeQuery(sql);) {
 			while (rs1.next()) {
@@ -78,37 +68,20 @@ public class BushoEditServlet extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html; charset=Windows-31J");
 		String bushoId = request.getParameter("bushoId");
 		String bushoName = request.getParameter("bushoName");
-
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(String.format("JDBCドライバーのロードに失敗しました。詳細:[%s]", e.getMessage()), e);
-		}
-
+		DatabaseConnection.driverLoad();
 		String url = "jdbc:oracle:thin:@localhost:1521:XE";
 		String user = "kiso";
-		String password = "kiso";
-
-		String deleteSql = "delete MS_BUSHO where BUSHO_ID = '" + bushoId + "'";
-		String insertSql = "INSERT into MS_BUSHO \n" +
-				"(BUSHO_ID, BUSHO_NAME) \n" +
-				"values ('" + bushoId + "','" + bushoName + "')";
-		try (
-				Connection con = DriverManager.getConnection(url, user, password);
-				Statement stmt = con.createStatement();) {
-			@SuppressWarnings("unused")
-			int resultCount1 = stmt.executeUpdate(deleteSql);
-			@SuppressWarnings("unused")
-			int resultCount2 = stmt.executeUpdate(insertSql);
-
-		} catch (Exception e) {
-			throw new RuntimeException(String.format("検索処理の実行中にエラーが発生しました。詳細:[%s]", e.getMessage()), e);
-		}
+		String pass = "kiso";
+		String sql = "update MS_BUSHO \n" + "set BUSHO_NAME ='" + bushoName + "' where  BUSHO_ID= '" + bushoId + "'";
+		DatabaseConnection.executeSql(url, user, pass, sql);
 		PrintWriter pw = response.getWriter();
 		pw.append(new ObjectMapper().writeValueAsString("ok"));
 	}

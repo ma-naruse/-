@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -38,17 +40,14 @@ public class LoginServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
-		// System.out.println("ログインサーブレット GET");
 		HttpSession session = request.getSession(true);
 		String loginId = (String) session.getAttribute("loginId");
 		String role = (String) session.getAttribute("role");
-		// System.out.println(loginId);
-		// System.out.println(role);
-		LoginInformation info = new LoginInformation();
-		info.setLoginId(loginId);
-		info.setRole(role);
+		Map<String, Object> data = new HashMap<>();
+		data.put("loginId", loginId);
+		data.put("role", role);
 		PrintWriter pw = response.getWriter();
-		pw.append(new ObjectMapper().writeValueAsString(info));
+		pw.append(new ObjectMapper().writeValueAsString(data));
 	}
 
 	/**
@@ -62,24 +61,16 @@ public class LoginServlet extends HttpServlet {
 		String loginRequest = request.getParameter("loginRequest");
 		String inputLoginId = request.getParameter("loginId");
 		String inputPassword = request.getParameter("password");
-		// System.out.println(inputLoginId);
-		// System.out.println(inputPassword);
-		// System.out.println(loginRequest);
 
 		HttpSession session = request.getSession(true);
 		String loginId = (String) session.getAttribute("loginId");
 		String role = (String) session.getAttribute("role");
-		System.out.println("role:" + role);
-		LoginInformation info = new LoginInformation();
+		Map<String, Object> data = new HashMap<>();
 		PrintWriter pw = response.getWriter();
 
 		if (role == null) {
 			System.out.println("ログイン");
-			try { // JDBCの準備
-				Class.forName("oracle.jdbc.driver.OracleDriver");
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(String.format("JDBCドライバのロードに失敗しました。詳細:[%s]", e.getMessage()), e);
-			}
+			DatabaseConnection.driverLoad();
 			String url = "jdbc:oracle:thin:@localhost:1521:XE";
 			String user = "kiso";
 			String pass = "kiso";
@@ -90,24 +81,20 @@ public class LoginServlet extends HttpServlet {
 			try (Connection con = DriverManager.getConnection(url, user, pass);
 					Statement stmt = con.createStatement();
 					ResultSet rs1 = stmt.executeQuery(sql);) {
-
 				while (rs1.next()) {
 					String newLoginId = rs1.getString("ID");
-					System.out.println(newLoginId);
-					String newRole = rs1.getString("ROLE");
-					System.out.println(newRole);
 					session.setAttribute("loginId", newLoginId);
+					String newRole = rs1.getString("ROLE");
 					session.setAttribute("role", newRole);
 				}
-
 			} catch (Exception e) {
 				throw new RuntimeException(String.format("検索処理の実施中にエラーが発生しました。	詳細:[%s]", e.getMessage()), e);
 			}
 			role = (String) session.getAttribute("role");
 			loginId = (String) session.getAttribute("loginId");
-			info.setLoginId(loginId);
-			info.setRole(role);
-			pw.append(new ObjectMapper().writeValueAsString(info));
+			data.put("loginId", loginId);
+			data.put("role", role);
+			pw.append(new ObjectMapper().writeValueAsString(data));
 		} else {
 			if (loginRequest != null && loginRequest.equals("logout")) {
 				System.out.println("ログアウト");
@@ -117,8 +104,8 @@ public class LoginServlet extends HttpServlet {
 			}
 		}
 
-		System.out.println(info.getLoginId());
-		System.out.println(info.getRole());
+		System.out.println(data.get("loginId"));
+		System.out.println(data.get("role"));
 	}
 
 }
