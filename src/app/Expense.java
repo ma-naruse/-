@@ -10,6 +10,7 @@ public class Expense {
 	private String status;
 	private String inputUserId;
 	private String inputUserName;
+	private String description;
 
 	public String getExpenseId() {
 		return expenseId;
@@ -81,5 +82,13 @@ public class Expense {
 
 	public void setInputUserName(String inputUserName) {
 		this.inputUserName = inputUserName;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

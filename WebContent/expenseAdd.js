@@ -18,12 +18,11 @@ function addExpense() {
 	var expenseId = $('#addExpenseId').val();
 	var itemName = $('#addExpenseItemName').val();
 	var price = $('#addExpensePrice').val();
-	var date = $('#addExpenseDate').val();
 	var requestQuery = {
 		expenseId : expenseId,
 		itemName : itemName,
 		price : price,
-		date : date
+		status : '未承認',
 	}
 	$.ajax({
 		type : 'POST',
@@ -40,7 +39,6 @@ function addExpense() {
 }
 
 function cancel() {
-	alert('入力をキャンセルしました。');
 	location.href = './expenseList.html';
 }
 

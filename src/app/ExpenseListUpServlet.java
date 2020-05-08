@@ -63,11 +63,11 @@ public class ExpenseListUpServlet extends HttpServlet {
 			String user = "kiso";
 			String pass = "kiso";
 
-			String sql = "select \n" + "MS.SHAIN_ID SHAIN_ID, \n" + "MK.EXPENSE_ID ID, \n" + "MK.EXPENSE_YMD YMD, \n" + "MK.UPDATE_YMD UPDATEYMD, \n"
-					+ "MK.UPDATE_USER_ID UPDATER, \n" + "MK.ITEMNAME NAME, \n" + "MK.PRICE PRICE, \n" + "MK.STATUS STATUS, \n"
-					+ "MS.SHAIN_NAME INPUTER \n" + "from MS_KEIHI MK, \n" + "MS_SHAIN MS \n" + "where MK.INPUT_USER_ID = MS.SHAIN_ID \n"
-					// + "and INPUT_USER_ID = '" + loginId + "' \n"
-					+ "order by EXPENSE_ID";
+			String sql = "select   \n" + "MS.SHAIN_ID SHAIN_ID,  \n" + "MK.EXPENSE_ID ID,   \n" + "MK.EXPENSE_YMD YMD,  \n"
+					+ "MK.UPDATE_YMD UPDATEYMD,  \n" + "MU.SHAIN_NAME UPDATER,  \n" + "MK.ITEMNAME NAME,  \n" + "MK.PRICE PRICE,  \n"
+					+ "MK.STATUS STATUS,  \n" + "MS.SHAIN_NAME INPUTER, \n" + "MK.DESCRIPTION DESCRIPTION \n" + "from MS_KEIHI MK,  \n"
+					+ "MS_SHAIN MS ,  \n" + "MS_SHAIN MU  \n" + "where MK.INPUT_USER_ID = MS.SHAIN_ID  \n"
+					+ "and MU.SHAIN_ID(+) = MK.UPDATE_USER_ID  \n" + "order by EXPENSE_ID ";
 			ExpenseListInformation info = new ExpenseListInformation();
 			info.setLoginId(loginId);
 			info.setRole(role);
@@ -86,6 +86,7 @@ public class ExpenseListUpServlet extends HttpServlet {
 					expense.setStatus(rs1.getString("STATUS"));
 					expense.setInputUserName(rs1.getString("INPUTER"));
 					expense.setInputUserId(rs1.getString("SHAIN_ID"));
+					expense.setDescription(rs1.getString("DESCRIPTION"));
 					expenseList.add(expense);
 				}
 

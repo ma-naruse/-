@@ -33,13 +33,14 @@ public class ShainEditServlet extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html; charset=Windows-31J");
 		String shainId = request.getParameter("shainId");
-		System.out.println("GET:"+shainId);
+		System.out.println("GET:" + shainId);
 
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -51,26 +52,14 @@ public class ShainEditServlet extends HttpServlet {
 		String user = "kiso";
 		String pass = "kiso";
 
-		String sql = "select \n" +
-				"MS.SHAIN_ID ID \n" +
-				", MS.SHAIN_NAME NAME \n" +
-				", MS.SHAIN_AGE AGE \n" +
-				", MS.SHAIN_SEX SEX \n" +
-				", MS.SHAIN_POSTCD POSTCD \n" +
-				", MS.SHAIN_PREFECTURE PRE \n" +
-				", MS.SHAIN_ADDRESS ADDRESS \n" +
-				", MB.BUSHO_NAME BN \n" +
-				"from \n" +
-				"MS_SHAIN MS \n" +
-				", MS_BUSHO MB \n" +
-				"where 1=1 \n" +
-				"and MS.SHAIN_BUSHOID = MB.BUSHO_ID \n" +
-				"and MS.SHAIN_ID = '" + shainId + "'";
+		String sql = "select \n" + "MS.SHAIN_ID ID \n" + ", MS.SHAIN_NAME NAME \n" + ", MS.SHAIN_AGE AGE \n" + ", MS.SHAIN_SEX SEX \n"
+				+ ", MS.SHAIN_POSTCD POSTCD \n" + ", MS.SHAIN_PREFECTURE PRE \n" + ", MS.SHAIN_ADDRESS ADDRESS \n" + ", MB.BUSHO_NAME BN \n"
+				+ "from \n" + "MS_SHAIN MS \n" + ", MS_BUSHO MB \n" + "where 1=1 \n" + "and MS.SHAIN_BUSHOID = MB.BUSHO_ID \n" + "and MS.SHAIN_ID = '"
+				+ shainId + "'";
 
 		List<Shain> shainList = new ArrayList<>();
 
-		try (
-				Connection con = DriverManager.getConnection(url, user, pass);
+		try (Connection con = DriverManager.getConnection(url, user, pass);
 				Statement stmt = con.createStatement();
 				ResultSet rs1 = stmt.executeQuery(sql);) {
 			while (rs1.next()) {
@@ -94,10 +83,11 @@ public class ShainEditServlet extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String shainId = request.getParameter("shainId");
 		String shainName = request.getParameter("shainName");
@@ -107,8 +97,8 @@ public class ShainEditServlet extends HttpServlet {
 		String shainPrefecture = request.getParameter("shainPrefecture");
 		String shainAddress = request.getParameter("shainAddress");
 		String bushoName = request.getParameter("bushoName");
-		System.out.println("POST:"+shainName);
-		System.out.println("POST:"+shainId);
+		System.out.println("POST:" + shainName);
+		System.out.println("POST:" + shainId);
 
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -122,8 +112,7 @@ public class ShainEditServlet extends HttpServlet {
 
 		String sqlForBushoId = "select BUSHO_ID from MS_BUSHO MB where MB.BUSHO_NAME = '" + bushoName + "'";
 		String bushoId = "";
-		try (
-				Connection con = DriverManager.getConnection(url, user, password);
+		try (Connection con = DriverManager.getConnection(url, user, password);
 				Statement stmt = con.createStatement();
 				ResultSet rs1 = stmt.executeQuery(sqlForBushoId);) {
 			while (rs1.next()) {
@@ -134,23 +123,14 @@ public class ShainEditServlet extends HttpServlet {
 		} catch (Exception e) {
 			throw new RuntimeException(String.format("検索処理の実行中にエラーが発生しました。詳細:[%s]", e.getMessage()), e);
 		}
-		String deleteSql = "delete MS_SHAIN where SHAIN_ID = '" + shainId + "'";
-		String insertSql = "INSERT into MS_SHAIN \n" +
-				"(SHAIN_ID, SHAIN_NAME, SHAIN_AGE, SHAIN_SEX, SHAIN_POSTCD, \n" +
-				"	SHAIN_PREFECTURE, SHAIN_ADDRESS, SHAIN_BUSHOID) \n" +
-				"values ('" + shainId + "','" + shainName + "','" + shainAge + "','" + shainSex + "','" + shainPostCd
-				+ "','" + shainPrefecture + "','" + shainAddress + "','" + bushoId + "')";
-		String commitSql = "commit";
+		String sql = "update MS_SHAIN set SHAIN_NAME = '" + shainName + "', SHAIN_AGE ='" + shainAge + "', SHAIN_SEX ='" + shainSex
+				+ "', SHAIN_POSTCD = '" + shainPostCd + "', SHAIN_PREFECTURE ='" + shainPrefecture + "', SHAIN_ADDRESS='" + shainAddress
+				+ "', SHAIN_BUSHOID ='" + bushoId + "' where SHAIN_ID ='" + shainId + "'";
+		System.out.println(sql);
 
-		try (
-				Connection con = DriverManager.getConnection(url, user, password);
-				Statement stmt = con.createStatement();) {
+		try (Connection con = DriverManager.getConnection(url, user, password); Statement stmt = con.createStatement();) {
 			@SuppressWarnings("unused")
-			int resultCount1 = stmt.executeUpdate(deleteSql);
-			@SuppressWarnings("unused")
-			int resultCount2 = stmt.executeUpdate(insertSql);
-			@SuppressWarnings("unused")
-			int resultCount3 = stmt.executeUpdate(commitSql);
+			int resultCount = stmt.executeUpdate(sql);
 
 		} catch (Exception e) {
 			throw new RuntimeException(String.format("検索処理の実行中にエラーが発生しました。詳細:[%s]", e.getMessage()), e);

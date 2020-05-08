@@ -18,7 +18,16 @@ function showShainInfo() {
 			} else {
 				for (var i = 0; i < data.length; i++) {
 					var shain = data[i];
-					$('#shainInfo').append('<div>社員ID:<span>' + shain.shainId + '</span><input type="hidden"value="' + shain.shainId + '"id="editShainId"></input><br>' + '社員名<input type="text" value=' + shain.shainName + ' id="editShainName"></input><br>' + '年齢<input type="text" value=' + shain.shainAge + ' id="editShainAge"></input><br>' + '性別<input type="text" value=' + shain.shainSex + ' id="editShainSex"></input><br>' + '郵便番号<input type="text" value=' + shain.shainPostCd + ' id="editShainPostCd"></input><br>' + '居住都道府県<select id="editShainPrefecture"><option>' + shain.shainPrefecture + '</option></select><br>' + '住所<input type="text" value=' + shain.shainAddress + ' id="editShainAddress"></input><br>' + '所属部署<select id="editBushoName"><option>' + shain.bushoName + '</option>' + '</div>');
+					$('#shainInfo').append(
+							'<div>社員ID:<span>' + shain.shainId + '</span><input type="hidden"value="' + shain.shainId
+									+ '"id="editShainId"></input><br>' + '社員名<input type="text" value=' + shain.shainName
+									+ ' id="editShainName"></input><br>' + '年齢<input type="text" value=' + shain.shainAge
+									+ ' id="editShainAge"></input><br>' + '性別<input type="text" value=' + shain.shainSex
+									+ ' id="editShainSex"></input><br>' + '郵便番号<input type="text" value=' + shain.shainPostCd
+									+ ' id="editShainPostCd"></input><br>' + '居住都道府県<select id="editShainPrefecture"><option>'
+									+ shain.shainPrefecture + '</option></select><br>' + '住所<input type="text" value=' + shain.shainAddress
+									+ ' id="editShainAddress"></input><br>' + '所属部署<select id="editBushoName"><option>' + shain.bushoName
+									+ '</option>' + '</div>');
 				}
 			}
 			listUpPrefecture();
@@ -98,7 +107,6 @@ function editShainInfo() {
 }
 
 function cancel() {
-	alert('入力をキャンセルしました。');
 	location.href = './shainList.html';
 }
 
