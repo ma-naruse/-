@@ -77,8 +77,10 @@ public class LoginServlet extends HttpServlet {
 			String user = "kiso";
 			String pass = "kiso";
 
+			String safetyPassword = PasswordUtil.getSafetyPassword(inputPassword, inputLoginId);
+
 			String sql = "select \n" + "SHAIN_ID ID, \n" + "PASSWORD PASS,\n" + "ROLE ROLE \n" + "from MS_LOGIN \n" + "where SHAIN_ID = '"
-					+ inputLoginId + "' and PASSWORD = '" + inputPassword + "'";
+					+ inputLoginId + "' and PASSWORD = '" + safetyPassword + "'";
 
 			try (Connection con = DriverManager.getConnection(url, user, pass);
 					Statement stmt = con.createStatement();

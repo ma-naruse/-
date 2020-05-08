@@ -12,10 +12,8 @@ function showAllShain() {
 				$('#shainList').append('<tr><th>社員ID</th><th>社員名</th><th>部署名</th></tr>')
 				var loginId = data.loginId;
 				console.log(loginId);
-				sessionStorage.setItem('loginId', loginId);
 				var role = data.role;
 				console.log(role);
-				sessionStorage.setItem('role', role);
 				for (var i = 0; i < data.shainList.length; i++) {
 					var shain = data.shainList[i];
 					console.log(shain);
@@ -40,6 +38,11 @@ function showAllShain() {
 				str += '<button onclick="window.open().location.href=\'/kisoTeichaku/shainSearch.html\'">検索</button><br>';
 				str += '<button onclick="logout()">ログアウト</button>'
 				$('#button').append(str);
+				if (role == 'manager') {
+					var string = '<br>社員ID<input type="text" id="inputRegistId"/><br>パスワード<input type="text" id="inputRegistPass"/>'
+							+ '<button onclick="regist()">登録</button>';
+					$('#registerDivision').append(string);
+				}
 			}
 
 		},
@@ -81,6 +84,26 @@ function deleteShain(button) {
 		window.alert('キャンセルされました');
 		return false;
 	}
+}
+
+function regist() {
+	var registId = $('#inputRegistId').val();
+	var registPass = $('#inputRegistPass').val();
+	$.ajax({
+		type : 'POST',
+		url : '/kisoTeichaku/RegistServlet',
+		dataType : 'json',
+		data : {
+			registId : registId,
+			registPass : registPass
+		},
+		success : function(data) {
+			alert('登録しました。');
+		},
+		error : function() {
+			alert('データの通信に失敗しました。');
+		}
+	});
 }
 
 function logout() {
